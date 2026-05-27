@@ -41,9 +41,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mosaic", type=float, default=None, help="Mosaic augmentation probability.")
     parser.add_argument("--cache", action="store_true", help="Cache images for faster training.")
     parser.add_argument("--exist-ok", action="store_true", help="Allow reuse of an existing run directory.")
-    parser.add_argument("--report-group", type=str, default=None, help="Optional report group id for aggregated comparison.")
+    parser.add_argument(
+        "--report-group", type=str, default=None, help="Optional report group id for aggregated comparison."
+    )
     parser.add_argument("--report-label", type=str, default=None, help="Optional short label for this experiment.")
-    parser.add_argument("--report-description", type=str, default=None, help="Optional description for this experiment.")
+    parser.add_argument(
+        "--report-description", type=str, default=None, help="Optional description for this experiment."
+    )
     parser.add_argument(
         "--amp",
         action=argparse.BooleanOptionalAction,
@@ -145,7 +149,9 @@ def _to_float(value: str | None) -> float | None:
         return None
 
 
-def build_run_summary(*, train_run_dir: Path, train_config: dict, metadata: dict, dataset_yaml: Path, source_config_path: Path) -> dict:
+def build_run_summary(
+    *, train_run_dir: Path, train_config: dict, metadata: dict, dataset_yaml: Path, source_config_path: Path
+) -> dict:
     results_csv = train_run_dir / "results.csv"
     rows: list[dict] = []
     if results_csv.exists():
@@ -267,8 +273,13 @@ def main() -> None:
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
+    from src.youge_versioning import (
+        build_versioned_name,
+        get_next_version,
+        normalize_version,
+        register_training_artifacts,
+    )
     from ultralytics import YOLO
-    from src.youge_versioning import build_versioned_name, get_next_version, normalize_version, register_training_artifacts
 
     dataset_root = repo_root / "datasets" / "data" / "youge"
     source_yaml = dataset_root / "dataset.yaml"
