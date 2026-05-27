@@ -8,7 +8,6 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 
-
 IMAGE_EXTENSIONS = {".bmp", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 
 
@@ -27,7 +26,9 @@ def resolve_output_dir(base_dir: Path, value: str) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Evaluate prediction labels against GT labels and generate an HTML report.")
+    parser = argparse.ArgumentParser(
+        description="Evaluate prediction labels against GT labels and generate an HTML report."
+    )
     parser.add_argument("--config", type=str, default=None, help="Path to a JSON config file.")
     parser.add_argument("--species", type=str, default=None, help="Dataset species name, e.g. youge.")
     parser.add_argument("--split", type=str, default=None, help="Dataset split to evaluate, e.g. train or val.")
@@ -42,7 +43,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--conf-threshold", type=float, default=None, help="Minimum prediction confidence.")
     parser.add_argument("--iou-threshold", type=float, default=None, help="IoU threshold for matching.")
     parser.add_argument("--max-items", type=int, default=None, help="Maximum images to show in HTML.")
-    parser.add_argument("--summary-only", action="store_true", help="Only compute and write summary.json without HTML details.")
+    parser.add_argument(
+        "--summary-only", action="store_true", help="Only compute and write summary.json without HTML details."
+    )
     parser.add_argument("--summary-output", type=str, default=None, help="Optional path for summary JSON output.")
     parser.add_argument("--exist-ok", action="store_true", help="Allow reuse of an existing run directory.")
     return parser.parse_args()
@@ -133,7 +136,12 @@ def collect_txts(label_dir: Path) -> dict[str, Path]:
     if not label_dir.exists():
         return labels
     for path in sorted(label_dir.iterdir()):
-        if path.is_file() and path.suffix.lower() == ".txt" and path.stem.lower() != "classes" and path.stem not in labels:
+        if (
+            path.is_file()
+            and path.suffix.lower() == ".txt"
+            and path.stem.lower() != "classes"
+            and path.stem not in labels
+        ):
             labels[path.stem] = path
     return labels
 
@@ -305,7 +313,7 @@ def format_detection_line(prefix: str, det: dict, show_iou: bool = False) -> str
 def write_item_html(report_dir: Path, item: dict, config: dict) -> str:
     details_dir = report_dir / "details"
     details_dir.mkdir(parents=True, exist_ok=True)
-    item_path = details_dir / f'{item["stem"]}.html'
+    item_path = details_dir / f"{item['stem']}.html"
     tp_html = "\n".join(f"      <li>{html.escape(line)}</li>" for line in item["tp_lines"]) or "      <li>无</li>"
     fp_html = "\n".join(f"      <li>{html.escape(line)}</li>" for line in item["fp_lines"]) or "      <li>无</li>"
     fn_html = "\n".join(f"      <li>{html.escape(line)}</li>" for line in item["fn_lines"]) or "      <li>无</li>"
@@ -316,7 +324,7 @@ def write_item_html(report_dir: Path, item: dict, config: dict) -> str:
             "<head>",
             '  <meta charset="utf-8">',
             '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
-            f'  <title>{html.escape(item["stem"])} - Youge Eval Detail</title>',
+            f"  <title>{html.escape(item['stem'])} - Youge Eval Detail</title>",
             "  <style>",
             "    body { margin: 0; padding: 24px; font-family: 'Segoe UI', sans-serif; background: #f3f6fa; color: #0f172a; }",
             "    h1 { margin: 0 0 10px; font-size: 28px; }",
@@ -342,7 +350,7 @@ def write_item_html(report_dir: Path, item: dict, config: dict) -> str:
             "</head>",
             "<body>",
             f'  <a class="back-link" href="{path_to_href(details_dir, report_dir / "index.html")}">返回汇总页</a>',
-            f'  <h1>{html.escape(item["stem"])}</h1>',
+            f"  <h1>{html.escape(item['stem'])}</h1>",
             f'  <p class="topline">split={html.escape(str(config["split"]))} | predict_name={html.escape(str(config["predict_name"]))} | conf={config["conf_threshold"]} | iou={config["iou_threshold"]}</p>',
             '  <section class="summary">',
             f'    <div class="summary-card"><div class="label">GT</div><div class="value">{item["gt_count"]}</div></div>',
@@ -384,7 +392,7 @@ def write_html(report_dir: Path, items: list[dict], summary: dict, config: dict)
                     f'    <div class="panel"><div class="panel-title">Predict</div><img src="{item["predict_image_href"]}" alt="{item["stem"]} predict"></div>',
                     "  </div>",
                     '  <div class="meta">',
-                    f'    <h2>{html.escape(item["stem"])}</h2>',
+                    f"    <h2>{html.escape(item['stem'])}</h2>",
                     f'    <div class="metric">GT: {item["gt_count"]} | Pred: {item["pred_count"]}</div>',
                     f'    <div class="metric">TP: {item["tp_count"]} | FP: {item["fp_count"]} | FN: {item["fn_count"]}</div>',
                     f'    <div class="metric"><a href="{item["detail_href"]}" target="_blank" rel="noopener noreferrer">打开单图页面</a></div>',
@@ -532,9 +540,13 @@ def main() -> None:
     default_pred_labels_dir = default_predict_image_dir / "labels"
 
     image_dir = Path(config["image_dir"]).resolve() if config["image_dir"] else default_image_dirs[0]
-    predict_image_dir = Path(config["predict_image_dir"]).resolve() if config["predict_image_dir"] else default_predict_image_dir
+    predict_image_dir = (
+        Path(config["predict_image_dir"]).resolve() if config["predict_image_dir"] else default_predict_image_dir
+    )
     gt_labels_dir = Path(config["gt_labels_dir"]).resolve() if config["gt_labels_dir"] else default_gt_label_dirs[0]
-    pred_labels_dir = Path(config["pred_labels_dir"]).resolve() if config["pred_labels_dir"] else default_pred_labels_dir
+    pred_labels_dir = (
+        Path(config["pred_labels_dir"]).resolve() if config["pred_labels_dir"] else default_pred_labels_dir
+    )
 
     if config["conf_threshold"] is None:
         run_config_path = predict_image_dir / "run_config.json"
@@ -587,7 +599,12 @@ def main() -> None:
             kind="label",
         )
 
-    if split != "both" and not (original_images.keys() & predicted_images.keys()) and config["image_dir"] is None and config["gt_labels_dir"] is None:
+    if (
+        split != "both"
+        and not (original_images.keys() & predicted_images.keys())
+        and config["image_dir"] is None
+        and config["gt_labels_dir"] is None
+    ):
         split, image_dir, gt_labels_dir, original_images = resolve_best_split(dataset_root, predicted_images, split)
         config["split"] = split
         gt_label_map = collect_txts(gt_labels_dir)
@@ -615,9 +632,15 @@ def main() -> None:
         summary["fn"] += len(matched["fn"])
 
         if not args.summary_only:
-            tp_lines = [format_detection_line(f"{idx}.", det, show_iou=True) for idx, det in enumerate(matched["tp"], start=1)]
-            fp_lines = [format_detection_line(f"{idx}.", det, show_iou=False) for idx, det in enumerate(matched["fp"], start=1)]
-            fn_lines = [format_detection_line(f"{idx}.", det, show_iou=False) for idx, det in enumerate(matched["fn"], start=1)]
+            tp_lines = [
+                format_detection_line(f"{idx}.", det, show_iou=True) for idx, det in enumerate(matched["tp"], start=1)
+            ]
+            fp_lines = [
+                format_detection_line(f"{idx}.", det, show_iou=False) for idx, det in enumerate(matched["fp"], start=1)
+            ]
+            fn_lines = [
+                format_detection_line(f"{idx}.", det, show_iou=False) for idx, det in enumerate(matched["fn"], start=1)
+            ]
             items.append(
                 {
                     "stem": stem,
