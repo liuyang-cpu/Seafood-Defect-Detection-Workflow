@@ -5,14 +5,13 @@ import csv
 import html
 import json
 import os
-from decimal import Decimal, InvalidOperation
 import shutil
 import subprocess
 import sys
 import time
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.parse import quote, urlencode
-
 
 TARGET_CLASSES = ["broken", "normal", "muddy", "empty"]
 COMPARE_COLORS = ["#2563eb", "#dc2626", "#0f766e", "#d97706", "#7c3aed", "#db2777"]
@@ -145,8 +144,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--name-prefix", type=str, default=None, help="Prefix for each run name.")
     parser.add_argument("--batch-name", type=str, default=None, help="Directory name for the aggregated conf report.")
     parser.add_argument("--version", type=str, default=None, help="Model version token, e.g. version001.")
-    parser.add_argument("--versions", nargs="+", default=None, help="Multiple model versions, e.g. version002 version003.")
-    parser.add_argument("--postprocess-version", type=str, default=None, help="Postprocess recipe version token, e.g. pp001.")
+    parser.add_argument(
+        "--versions", nargs="+", default=None, help="Multiple model versions, e.g. version002 version003."
+    )
+    parser.add_argument(
+        "--postprocess-version", type=str, default=None, help="Postprocess recipe version token, e.g. pp001."
+    )
     parser.add_argument(
         "--postprocess-versions",
         nargs="+",
@@ -289,9 +292,11 @@ def build_overlay_panel_html(
     )
 
 
-def write_gt_editor_html(editor_dir: Path, batch_dir: Path, conf_threshold: object, item: dict, class_names: dict[str, str]) -> str:
+def write_gt_editor_html(
+    editor_dir: Path, batch_dir: Path, conf_threshold: object, item: dict, class_names: dict[str, str]
+) -> str:
     editor_dir.mkdir(parents=True, exist_ok=True)
-    editor_path = editor_dir / f'{item["stem"]}.html'
+    editor_path = editor_dir / f"{item['stem']}.html"
     image_href = path_to_href(editor_dir, Path(str(item["image_path"])))
     label_path = item.get("gt_label_path")
     label_href = path_to_href(editor_dir, Path(str(label_path))) if label_path else ""
@@ -311,7 +316,7 @@ def write_gt_editor_html(editor_dir: Path, batch_dir: Path, conf_threshold: obje
             "<head>",
             '  <meta charset="utf-8">',
             '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
-            f'  <title>{html.escape(str(item["stem"]))} - GT Editor</title>',
+            f"  <title>{html.escape(str(item['stem']))} - GT Editor</title>",
             "  <style>",
             "    body { margin: 0; padding: 18px; font-family: 'Segoe UI', sans-serif; background: #f3f6fa; color: #0f172a; }",
             "    .layout { display: grid; grid-template-columns: minmax(0, 1.2fr) 360px; gap: 18px; }",
@@ -377,7 +382,7 @@ def write_gt_editor_html(editor_dir: Path, batch_dir: Path, conf_threshold: obje
             "      </div>",
             "    </aside>",
             "  </div>",
-            f'  <script>const initialData = {json.dumps(payload, ensure_ascii=False)};</script>',
+            f"  <script>const initialData = {json.dumps(payload, ensure_ascii=False)};</script>",
             "  <script>",
             "const classMap = initialData.class_names || {};",
             "const classIds = Object.keys(classMap).sort((a, b) => Number(a) - Number(b));",
@@ -822,22 +827,19 @@ def build_count_example_cards(
         return f'<div class="empty-hint">{html.escape(empty_text)}</div>'
 
     cards: list[str] = []
-    editor_dir = batch_dir / "_gt_editors" / f'conf_{format_threshold_suffix(float(conf_threshold))}'
+    editor_dir = batch_dir / "_gt_editors" / f"conf_{format_threshold_suffix(float(conf_threshold))}"
     for item in items:
         original_path = Path(str(item["image_path"]))
         predict_path = Path(str(item["predict_image_path"]))
         editor_href = write_gt_editor_html(editor_dir, batch_dir, conf_threshold, item, class_names)
         labelimg_href = write_labelimg_launcher(editor_dir, batch_dir, item, labelimg_exe, class_file_path)
         inspector_predict_dir = predict_path.parent
-        inspector_href = (
-            f"http://127.0.0.1:{int(item.get('labelimg_server_port', 8765))}/open_inspector?"
-            + urlencode(
-                {
-                    "predict_dir": str(inspector_predict_dir),
-                    "image_name": predict_path.name,
-                },
-                quote_via=quote,
-            )
+        inspector_href = f"http://127.0.0.1:{int(item.get('labelimg_server_port', 8765))}/open_inspector?" + urlencode(
+            {
+                "predict_dir": str(inspector_predict_dir),
+                "image_name": predict_path.name,
+            },
+            quote_via=quote,
         )
         original_panel = build_overlay_panel_html(
             image_href=path_to_href(batch_dir, original_path),
@@ -848,7 +850,7 @@ def build_count_example_cards(
         )
         predict_panel = build_overlay_panel_html(
             image_href=path_to_href(batch_dir, original_path),
-            title=f'Predict @ conf>={format_threshold_text(float(conf_threshold))}',
+            title=f"Predict @ conf>={format_threshold_text(float(conf_threshold))}",
             detections=item.get("pred_detections", []),
             stroke_color="#ea580c",
             label_prefix="Pred",
@@ -895,16 +897,16 @@ def build_count_diagnostic_sections(
         overcounted = diagnostics.get("overcounted", [])
         undercounted = diagnostics.get("undercounted", [])
         largest_abs_errors = diagnostics.get("largest_abs_errors", [])
-        section_id = f'diag_{format_threshold_suffix(float(row["conf_threshold"]))}'
+        section_id = f"diag_{format_threshold_suffix(float(row['conf_threshold']))}"
         sections.append(
             "\n".join(
                 [
                     f'<details class="diag-section" id="{section_id}">',
-                    f'  <summary>conf={html.escape(str(row["conf_threshold"]))} | abs={row["abs_count_error"]} | count_diff={row["count_diff"]} | 点击展开计数样本</summary>',
+                    f"  <summary>conf={html.escape(str(row['conf_threshold']))} | abs={row['abs_count_error']} | count_diff={row['count_diff']} | 点击展开计数样本</summary>",
                     '  <div class="diag-grid">',
                     '    <section class="diag-block">',
-                    '      <h3>计多了</h3>',
-                    '      <p>Pred 数量大于 GT 的样本，按绝对计数误差从大到小展示。</p>',
+                    "      <h3>计多了</h3>",
+                    "      <p>Pred 数量大于 GT 的样本，按绝对计数误差从大到小展示。</p>",
                     build_count_example_cards(
                         batch_dir,
                         overcounted,
@@ -916,8 +918,8 @@ def build_count_diagnostic_sections(
                     ),
                     "    </section>",
                     '    <section class="diag-block">',
-                    '      <h3>计少了</h3>',
-                    '      <p>Pred 数量小于 GT 的样本，按绝对计数误差从大到小展示。</p>',
+                    "      <h3>计少了</h3>",
+                    "      <p>Pred 数量小于 GT 的样本，按绝对计数误差从大到小展示。</p>",
                     build_count_example_cards(
                         batch_dir,
                         undercounted,
@@ -929,8 +931,8 @@ def build_count_diagnostic_sections(
                     ),
                     "    </section>",
                     '    <section class="diag-block diag-block-wide">',
-                    '      <h3>绝对计数误差最大样本</h3>',
-                    '      <p>不区分正负，方便快速定位最影响 abs 的样本。</p>',
+                    "      <h3>绝对计数误差最大样本</h3>",
+                    "      <p>不区分正负，方便快速定位最影响 abs 的样本。</p>",
                     build_count_example_cards(
                         batch_dir,
                         largest_abs_errors,
@@ -968,7 +970,9 @@ def write_batch_html(batch_dir: Path, rows: list[dict], meta: dict) -> None:
 
     predict_params = meta.get("predict_params", {})
     predict_param_text = " | ".join(
-        f"{key}={predict_params[key]}" for key in ("conf", "iou", "edge_penalty", "edge_touch_px", "flat_ratio_threshold", "edge_penalty_factor") if key in predict_params
+        f"{key}={predict_params[key]}"
+        for key in ("conf", "iou", "edge_penalty", "edge_touch_px", "flat_ratio_threshold", "edge_penalty_factor")
+        if key in predict_params
     )
     best_defect_detect_row = max(rows, key=lambda item: float(item["defect_detect_rate"]))
     best_defect_miss_row = min(rows, key=lambda item: float(item["defect_miss_rate"]))
@@ -1014,7 +1018,7 @@ def write_batch_html(batch_dir: Path, rows: list[dict], meta: dict) -> None:
             title="缺陷筛选业务指标变化",
             subtitle="重点关注缺陷筛出率、缺陷漏检率、以及正常品误剔率",
             rows=rows,
-        )
+        ),
     ]
     for class_name in TARGET_CLASSES:
         best_row = max(rows, key=lambda item: float(item[f"{class_name}_f1"]))
@@ -1032,7 +1036,7 @@ def write_batch_html(batch_dir: Path, rows: list[dict], meta: dict) -> None:
 
     table_rows: list[str] = []
     for row in rows:
-        diag_anchor = f'#diag_{format_threshold_suffix(float(row["conf_threshold"]))}'
+        diag_anchor = f"#diag_{format_threshold_suffix(float(row['conf_threshold']))}"
         cells = [
             f"<td>{html.escape(str(row['conf_threshold']))}</td>",
             f"<td>{row['abs_count_error']}</td>",
@@ -1178,7 +1182,7 @@ def write_batch_html(batch_dir: Path, rows: list[dict], meta: dict) -> None:
             "  </table>",
             '  <section class="diag-root">',
             "    <h2>计数误差样本定位</h2>",
-            "    <p class=\"diag-intro\">展开某个 conf 后，可以直接看到哪些图计多了、哪些图计少了，以及它们的 Original / Predict 对照。右侧只显示当前 conf threshold 下真正参与统计的预测框。</p>",
+            '    <p class="diag-intro">展开某个 conf 后，可以直接看到哪些图计多了、哪些图计少了，以及它们的 Original / Predict 对照。右侧只显示当前 conf threshold 下真正参与统计的预测框。</p>',
             diagnostic_sections,
             "  </section>",
             "  <script>",
@@ -1301,7 +1305,11 @@ def build_compare_chart(
             y = y_pos(value)
             points.append(f"{x:.2f},{y:.2f}")
             point_marks.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="4" fill="{color}"></circle>')
-        best_row = min(best_rows, key=lambda item: float(item["conf_threshold"])) if lower_is_better else min(best_rows, key=lambda item: float(item["conf_threshold"]))
+        best_row = (
+            min(best_rows, key=lambda item: float(item["conf_threshold"]))
+            if lower_is_better
+            else min(best_rows, key=lambda item: float(item["conf_threshold"]))
+        )
         bx = x_pos(float(best_row["conf_threshold"]))
         by = y_pos(float(best_row[key]))
         label_y = max(by - 18, 18)
@@ -1359,7 +1367,17 @@ def write_version_compare_report(compare_dir: Path, versions_payload: list[dict]
     }
     write_batch_json(compare_dir, payload)
 
-    fieldnames = ["version", "conf_threshold", "abs_count_error", "defect_detect_rate", "defect_miss_rate", "normal_to_defect_rate", "precision", "recall", "f1"]
+    fieldnames = [
+        "version",
+        "conf_threshold",
+        "abs_count_error",
+        "defect_detect_rate",
+        "defect_miss_rate",
+        "normal_to_defect_rate",
+        "precision",
+        "recall",
+        "f1",
+    ]
     with (compare_dir / "summary.csv").open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -1399,11 +1417,40 @@ def write_version_compare_report(compare_dir: Path, versions_payload: list[dict]
         )
 
     charts = [
-        build_compare_chart("多版本整体计数误差对比", "同一组 conf threshold 下比较各版本绝对计数误差", versions_payload, "abs_count_error", "abs", lower_is_better=True),
-        build_compare_chart("多版本缺陷筛出率对比", "同一组 conf threshold 下比较各版本缺陷筛出率", versions_payload, "defect_detect_rate", "detect"),
-        build_compare_chart("多版本缺陷漏检率对比", "同一组 conf threshold 下比较各版本缺陷漏检率", versions_payload, "defect_miss_rate", "miss", lower_is_better=True),
-        build_compare_chart("多版本正常品误剔率对比", "同一组 conf threshold 下比较各版本 normal 误剔率", versions_payload, "normal_to_defect_rate", "normal", lower_is_better=True),
-        build_compare_chart("多版本 Overall F1 对比", "同一组 conf threshold 下比较各版本整体 F1", versions_payload, "f1", "f1"),
+        build_compare_chart(
+            "多版本整体计数误差对比",
+            "同一组 conf threshold 下比较各版本绝对计数误差",
+            versions_payload,
+            "abs_count_error",
+            "abs",
+            lower_is_better=True,
+        ),
+        build_compare_chart(
+            "多版本缺陷筛出率对比",
+            "同一组 conf threshold 下比较各版本缺陷筛出率",
+            versions_payload,
+            "defect_detect_rate",
+            "detect",
+        ),
+        build_compare_chart(
+            "多版本缺陷漏检率对比",
+            "同一组 conf threshold 下比较各版本缺陷漏检率",
+            versions_payload,
+            "defect_miss_rate",
+            "miss",
+            lower_is_better=True,
+        ),
+        build_compare_chart(
+            "多版本正常品误剔率对比",
+            "同一组 conf threshold 下比较各版本 normal 误剔率",
+            versions_payload,
+            "normal_to_defect_rate",
+            "normal",
+            lower_is_better=True,
+        ),
+        build_compare_chart(
+            "多版本 Overall F1 对比", "同一组 conf threshold 下比较各版本整体 F1", versions_payload, "f1", "f1"
+        ),
     ]
 
     table_rows: list[str] = []
@@ -1537,7 +1584,9 @@ def run_single_version(
     batch_name = (args.batch_name or "conf_summary").rstrip("_-")
     batch_dir = version_root_dir / batch_name
     batch_dir.mkdir(parents=True, exist_ok=True)
-    write_labelimg_server_cmd(batch_dir, Path(sys.executable), script_dir / "labelimg_launcher_server.py", labelimg_server_port)
+    write_labelimg_server_cmd(
+        batch_dir, Path(sys.executable), script_dir / "labelimg_launcher_server.py", labelimg_server_port
+    )
     summary_cache_dir = batch_dir / "_summaries"
     summary_cache_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1603,7 +1652,9 @@ def run_single_version(
         "model_version": version,
         "postprocess_version": postprocess_version,
         "predict_params": predict_params,
-        "iou_threshold": args.iou_threshold if args.iou_threshold is not None else serial_config.get("iou_threshold", 0.5),
+        "iou_threshold": args.iou_threshold
+        if args.iou_threshold is not None
+        else serial_config.get("iou_threshold", 0.5),
         "class_names": summary_payload.get("class_names", summary.get("class_names", {})),
         "labelimg_exe": str(labelimg_exe) if labelimg_exe else None,
         "class_file_path": str(class_file_path) if class_file_path.exists() else None,
@@ -1652,7 +1703,9 @@ def main() -> None:
     config_conf_tokens = serial_config.get("conf_thresholds") or ["0.70-0.90:0.01"]
     if isinstance(config_conf_tokens, str):
         config_conf_tokens = [config_conf_tokens]
-    conf_thresholds = unique_conf_thresholds(args.conf_thresholds or parse_conf_thresholds([str(token) for token in config_conf_tokens]))
+    conf_thresholds = unique_conf_thresholds(
+        args.conf_thresholds or parse_conf_thresholds([str(token) for token in config_conf_tokens])
+    )
     requested_versions = list(args.versions or [])
     requested_versions.extend(ensure_list(args.version))
     requested_versions.extend(ensure_list(serial_config.get("versions")))
