@@ -184,7 +184,7 @@
       "delta_pred_boxes": -21,
       "delta_precision": 0.0038009699026647636,
       "delta_recall": -0.0035335689045935537,
-      "delta_f1": 1.741890070017238e-05
+      "delta_f1": 1.741890070017238e-5
     },
     {
       "conf_threshold": 0.8,

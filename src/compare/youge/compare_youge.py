@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime
-import json
 import html
+import json
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
 
 import cv2
 import numpy as np
-
 
 IMAGE_EXTENSIONS = {".bmp", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 
@@ -157,7 +156,7 @@ def resize_to_height(image: np.ndarray, target_height: int) -> np.ndarray:
         return image
 
     scale = target_height / image.shape[0]
-    target_width = max(1, int(round(image.shape[1] * scale)))
+    target_width = max(1, round(image.shape[1] * scale))
     return cv2.resize(image, (target_width, target_height), interpolation=cv2.INTER_LINEAR)
 
 
@@ -166,7 +165,7 @@ def resize_to_width(image: np.ndarray, target_width: int) -> np.ndarray:
         return image
 
     scale = target_width / image.shape[1]
-    target_height = max(1, int(round(image.shape[0] * scale)))
+    target_height = max(1, round(image.shape[0] * scale))
     return cv2.resize(image, (target_width, target_height), interpolation=cv2.INTER_LINEAR)
 
 
@@ -213,10 +212,10 @@ def xywhn_to_xyxy_pixels(
 ) -> tuple[int, int, int, int]:
     half_w = width * image_width / 2.0
     half_h = height * image_height / 2.0
-    x1 = int(round(x_center * image_width - half_w))
-    y1 = int(round(y_center * image_height - half_h))
-    x2 = int(round(x_center * image_width + half_w))
-    y2 = int(round(y_center * image_height + half_h))
+    x1 = round(x_center * image_width - half_w)
+    y1 = round(y_center * image_height - half_h)
+    x2 = round(x_center * image_width + half_w)
+    y2 = round(y_center * image_height + half_h)
     x1 = max(0, min(image_width - 1, x1))
     y1 = max(0, min(image_height - 1, y1))
     x2 = max(0, min(image_width - 1, x2))
@@ -379,7 +378,7 @@ def write_index_html(report_dir: Path, output_dir: Path, items: list[dict[str, s
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cards: list[str] = []
     for item in items:
-        meta_lines = [f'    <h2>{html.escape(str(item["stem"]))}</h2>']
+        meta_lines = [f"    <h2>{html.escape(str(item['stem']))}</h2>"]
         if item["box_count"] is not None:
             meta_lines.append(f'    <div class="summary">框数量：{item["box_count"]}</div>')
         if item["detection_lines"]:
@@ -434,7 +433,7 @@ def write_index_html(report_dir: Path, output_dir: Path, items: list[dict[str, s
             "<body>",
             '  <header class="header">',
             "    <h1>Comparison Report</h1>",
-            f"    <div class=\"generated-at\">生成时间：{generated_at}</div>",
+            f'    <div class="generated-at">生成时间：{generated_at}</div>',
             "  </header>",
             '  <main class="container">',
             *cards,
@@ -463,8 +462,8 @@ def main() -> None:
 
     from src.youge_versioning import (
         build_predict_run_name,
-        extract_version_from_text,
         extract_postprocess_version_from_text,
+        extract_version_from_text,
         normalize_postprocess_version,
         normalize_version,
     )
@@ -476,11 +475,12 @@ def main() -> None:
     version = normalize_version(compare_config.get("version"))
     postprocess_version = normalize_postprocess_version(compare_config.get("postprocess_version"))
     if version is None:
-        version = extract_version_from_text(compare_config.get("predict_name")) or extract_version_from_text(compare_config.get("name"))
+        version = extract_version_from_text(compare_config.get("predict_name")) or extract_version_from_text(
+            compare_config.get("name")
+        )
     if version is None:
-        version = (
-            extract_version_from_text(compare_config.get("after_dir"))
-            or extract_version_from_text(compare_config.get("labels_dir"))
+        version = extract_version_from_text(compare_config.get("after_dir")) or extract_version_from_text(
+            compare_config.get("labels_dir")
         )
     if postprocess_version is None:
         postprocess_version = (
