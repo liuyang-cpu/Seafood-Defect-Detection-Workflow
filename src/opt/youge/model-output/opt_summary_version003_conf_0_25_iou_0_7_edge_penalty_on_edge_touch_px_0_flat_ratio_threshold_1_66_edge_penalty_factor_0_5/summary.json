@@ -133,7 +133,7 @@
       "delta_pred_boxes": -7,
       "delta_precision": 0.0012060728216038985,
       "delta_recall": -0.0011900039666798978,
-      "delta_f1": 8.996973905250893e-05
+      "delta_f1": 8.996973905250893e-5
     },
     {
       "conf_threshold": 0.75,
@@ -150,7 +150,7 @@
       "delta_pred_boxes": -6,
       "delta_precision": 0.0008794524174599028,
       "delta_recall": -0.0011900039666798978,
-      "delta_f1": -8.717790660250913e-05
+      "delta_f1": -8.717790660250913e-5
     },
     {
       "conf_threshold": 0.76,
@@ -201,7 +201,7 @@
       "delta_pred_boxes": -2,
       "delta_precision": 0.0002986435913877594,
       "delta_recall": -0.00039666798889326227,
-      "delta_f1": -2.909470921619306e-05
+      "delta_f1": -2.909470921619306e-5
     },
     {
       "conf_threshold": 0.79,

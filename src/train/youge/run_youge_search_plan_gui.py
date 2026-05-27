@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import json
 import queue
 import sys
 import threading
 import tkinter as tk
-import json
 from pathlib import Path
 from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
@@ -83,8 +83,12 @@ class SearchPlanRunnerApp:
         workers_entry = ttk.Entry(options, textvariable=self.workers_var, width=10)
         workers_entry.grid(row=1, column=3, sticky="w", padx=(6, 16), pady=(10, 0))
 
-        ttk.Checkbutton(options, text="仅预演，不执行训练", variable=self.dry_run_var).grid(row=2, column=0, sticky="w", pady=(10, 0))
-        ttk.Checkbutton(options, text="跳过汇总报告", variable=self.skip_report_var).grid(row=2, column=1, sticky="w", pady=(10, 0))
+        ttk.Checkbutton(options, text="仅预演，不执行训练", variable=self.dry_run_var).grid(
+            row=2, column=0, sticky="w", pady=(10, 0)
+        )
+        ttk.Checkbutton(options, text="跳过汇总报告", variable=self.skip_report_var).grid(
+            row=2, column=1, sticky="w", pady=(10, 0)
+        )
 
         info_frame = ttk.LabelFrame(frame, text="计划摘要", padding=10)
         info_frame.grid(row=2, column=0, columnspan=3, sticky="ew", pady=(0, 8))

@@ -76,7 +76,9 @@ def list_resume_candidates(runs_train_root: Path) -> list[dict]:
     if not runs_train_root.exists():
         return []
     runs = []
-    for run_dir in sorted((path for path in runs_train_root.iterdir() if path.is_dir()), key=lambda p: p.stat().st_mtime, reverse=True):
+    for run_dir in sorted(
+        (path for path in runs_train_root.iterdir() if path.is_dir()), key=lambda p: p.stat().st_mtime, reverse=True
+    ):
         info = inspect_run(run_dir)
         if info["resume_checkpoint"]:
             runs.append(info)
@@ -174,12 +176,7 @@ def resume_run(
         return_code = process.wait()
         if return_code != 0:
             tail = "\n".join(output_lines[-80:])
-            raise RuntimeError(
-                "续训训练子进程失败。\n"
-                f"命令：{command}\n\n"
-                "最后输出：\n"
-                f"{tail}"
-            )
+            raise RuntimeError(f"续训训练子进程失败。\n命令：{command}\n\n最后输出：\n{tail}")
     finally:
         if process.poll() is None:
             process.kill()
