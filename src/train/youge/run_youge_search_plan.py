@@ -56,8 +56,7 @@ def list_plan_sources(script_path: Path) -> list[tuple[str, Path]]:
 
     if materialized_root.exists():
         candidates = [
-            path for path in materialized_root.iterdir()
-            if path.is_dir() and path.name.startswith("materialized_")
+            path for path in materialized_root.iterdir() if path.is_dir() and path.name.startswith("materialized_")
         ]
         for path in sorted(candidates, key=lambda item: item.name):
             sources.append((f"LLM计划 | {path.name}", path.resolve()))
@@ -116,9 +115,7 @@ def resolve_experiment_config_path(plan_dir: Path, run: dict) -> Path:
     if fallback.exists():
         return fallback
 
-    raise FileNotFoundError(
-        f"Experiment config not found. Manifest path={raw_path}, fallback path={fallback}"
-    )
+    raise FileNotFoundError(f"Experiment config not found. Manifest path={raw_path}, fallback path={fallback}")
 
 
 def get_plan_selection(
@@ -178,10 +175,12 @@ def run_plan(
         log_fn(
             "Global overrides: "
             + ", ".join(
-                part for part in (
+                part
+                for part in (
                     f"batch={batch}" if batch is not None else "",
                     f"workers={workers}" if workers is not None else "",
-                ) if part
+                )
+                if part
             )
         )
     for run in selected_runs:

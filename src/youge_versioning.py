@@ -7,7 +7,6 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 VERSION_PATTERN = re.compile(r"version(\d+)", re.IGNORECASE)
 TRAILING_VERSION_PATTERN = re.compile(r"(?:[_-])?version\d+$", re.IGNORECASE)
 POSTPROCESS_VERSION_PATTERN = re.compile(r"(?:pp|postprocess)(\d+)", re.IGNORECASE)

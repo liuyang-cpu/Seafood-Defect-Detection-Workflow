@@ -12,26 +12,11 @@
     "当前数据无增强配置，鉴于问题为截断 / 边缘目标，保守引入轻微 translate/scale/erasing 可能提升鲁棒性"
   ],
   "range_updates": {
-    "epochs": [
-      80,
-      120
-    ],
-    "mosaic": [
-      0.0,
-      0.1
-    ],
-    "translate": [
-      0.02,
-      0.05
-    ],
-    "scale": [
-      0.15,
-      0.25
-    ],
-    "erasing": [
-      0.0,
-      0.1
-    ]
+    "epochs": [80, 120],
+    "mosaic": [0.0, 0.1],
+    "translate": [0.02, 0.05],
+    "scale": [0.15, 0.25],
+    "erasing": [0.0, 0.1]
   },
   "frozen_params": {
     "mixup": 0.0,
