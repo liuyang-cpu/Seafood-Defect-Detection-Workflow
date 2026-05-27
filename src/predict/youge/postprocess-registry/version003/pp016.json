@@ -1,0 +1,31 @@
+{
+  "species": "youge",
+  "model_version": "version003",
+  "postprocess_version": "pp016",
+  "fingerprint": "sha256:dba6dc493e127bda601de7a5300fcb91710a0242bab4c223b29fb70c2b08ead5",
+  "created_at": "2026-05-21T08:39:01.005986+00:00",
+  "rules": {
+    "edge_penalty": true,
+    "same_class_contain_suppression": true,
+    "contain_ratio_threshold": 0.85,
+    "horizontal_edge_touch_px": 1.0,
+    "horizontal_flat_ratio_threshold": 1.79,
+    "horizontal_edge_span_threshold": 0.0,
+    "horizontal_penalty_factor": 0.5,
+    "vertical_rule": true,
+    "vertical_intact_aspect_ratio_threshold": 1.2,
+    "vertical_edge_span_threshold": 0.6,
+    "vertical_edge_span_threshold_thin": 0.82,
+    "vertical_defective_penalty_factor": 0.5,
+    "vertical_edge_margin_px": 1.0
+  },
+  "export_options": {
+    "export_penalty_hits": true,
+    "penalty_hits_dirname": "penalty_hits"
+  },
+  "examples": {
+    "predict_run_name": "youge_predict_version003_pp016",
+    "weights": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\runs\\train\\youge_yolo11n_version003\\weights\\best.pt",
+    "source": null
+  }
+}

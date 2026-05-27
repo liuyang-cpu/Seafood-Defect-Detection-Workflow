@@ -1,0 +1,190 @@
+{
+  "_comment": "youge 训练调参搜索空间。重点针对相邻帧截断框误分类：提高分辨率、拉长训练、减弱过强增强、避免不真实的形态扰动。",
+  "baseline_version": "version003",
+  "baseline_observed_args": {
+    "epochs": 30,
+    "imgsz": 640,
+    "batch": 4,
+    "device": "0",
+    "workers": 4,
+    "patience": 50,
+    "optimizer": "auto",
+    "amp": false,
+    "mosaic": 0.0,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "translate": 0.1,
+    "scale": 0.5,
+    "fliplr": 0.5,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "erasing": 0.4
+  },
+  "stage1_recommended_grid": {
+    "_comment": "第一阶段先做小规模网格，优先验证对截断误分类最敏感的几项。",
+    "epochs": [60, 90, 120],
+    "imgsz": [640, 768, 896],
+    "batch": [4, 8],
+    "amp": [false, true],
+    "mosaic": [0.0, 0.1, 0.2],
+    "translate": [0.02, 0.05, 0.08],
+    "scale": [0.15, 0.25, 0.35],
+    "erasing": [0.0, 0.1, 0.2]
+  },
+  "full_search_space": {
+    "_comment": "完整版搜索空间。可用于脚本扩展后、或直接调用 ultralytics 原生 train/tune。",
+    "epochs": {
+      "type": "int",
+      "min": 60,
+      "max": 140,
+      "step": 20
+    },
+    "imgsz": {
+      "type": "categorical",
+      "values": [640, 768, 896]
+    },
+    "batch": {
+      "type": "categorical",
+      "values": [4, 8]
+    },
+    "patience": {
+      "type": "categorical",
+      "values": [40, 60, 80]
+    },
+    "amp": {
+      "type": "categorical",
+      "values": [false, true]
+    },
+    "optimizer": {
+      "type": "categorical",
+      "values": ["auto", "AdamW", "SGD"]
+    },
+    "lr0": {
+      "type": "float",
+      "min": 0.002,
+      "max": 0.01,
+      "scale": "log"
+    },
+    "lrf": {
+      "type": "float",
+      "min": 0.01,
+      "max": 0.2
+    },
+    "weight_decay": {
+      "type": "float",
+      "min": 0.0002,
+      "max": 0.001,
+      "scale": "log"
+    },
+    "warmup_epochs": {
+      "type": "float",
+      "min": 1.0,
+      "max": 5.0
+    },
+    "warmup_momentum": {
+      "type": "float",
+      "min": 0.75,
+      "max": 0.9
+    },
+    "mosaic": {
+      "type": "float",
+      "min": 0.0,
+      "max": 0.2
+    },
+    "close_mosaic": {
+      "type": "categorical",
+      "values": [0, 5, 10]
+    },
+    "mixup": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "copy_paste": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "degrees": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "translate": {
+      "type": "float",
+      "min": 0.02,
+      "max": 0.08
+    },
+    "scale": {
+      "type": "float",
+      "min": 0.15,
+      "max": 0.35
+    },
+    "shear": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "perspective": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "flipud": {
+      "type": "categorical",
+      "values": [0.0]
+    },
+    "fliplr": {
+      "type": "categorical",
+      "values": [0.0, 0.5]
+    },
+    "hsv_h": {
+      "type": "float",
+      "min": 0.005,
+      "max": 0.02
+    },
+    "hsv_s": {
+      "type": "float",
+      "min": 0.3,
+      "max": 0.6
+    },
+    "hsv_v": {
+      "type": "float",
+      "min": 0.15,
+      "max": 0.35
+    },
+    "erasing": {
+      "type": "float",
+      "min": 0.0,
+      "max": 0.2
+    },
+    "multi_scale": {
+      "type": "categorical",
+      "values": [false]
+    }
+  },
+  "fixed_recommendations": {
+    "_comment": "这些项建议先固定，不要一开始就放进搜索空间里。",
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0
+  },
+  "priority_order": [
+    "imgsz",
+    "epochs",
+    "amp",
+    "mosaic",
+    "translate",
+    "scale",
+    "erasing",
+    "lr0",
+    "weight_decay"
+  ],
+  "notes": [
+    "当前 version003 只训练了 30 epoch，先把训练时长拉起来再谈更细的超参。",
+    "截断误分类更像数据分布和增强问题，所以 mosaic、translate、scale、erasing 的范围要收窄，避免制造不真实截断形态。",
+    "如果显存允许，imgsz 优先试到 768 或 896，这类边缘截断目标对分辨率更敏感。",
+    "mixup 和 copy_paste 先固定为 0，不建议在这个任务里引入更复杂的合成形态。",
+    "如果后续要自动搜索，建议先做 stage1_recommended_grid，再对最优区域做二次细化。"
+  ]
+}

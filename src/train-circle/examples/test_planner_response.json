@@ -1,0 +1,50 @@
+{
+  "observations": [
+    "higher epochs helped more than larger imgsz"
+  ],
+  "frozen_params": {
+    "mixup": 0.0,
+    "copy_paste": 0.0
+  },
+  "range_updates": {
+    "translate": [
+      0.02,
+      0.05
+    ],
+    "scale": [
+      0.15,
+      0.25
+    ],
+    "erasing": [
+      0.0,
+      0.1
+    ]
+  },
+  "recommended_runs": [
+    {
+      "label": "round2_epochs90_conservative",
+      "reason": "increase training duration while shrinking augmentation",
+      "overrides": {
+        "epochs": 90,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.0,
+        "amp": true
+      }
+    },
+    {
+      "label": "round2_img896_epochs90",
+      "reason": "test high resolution with conservative augmentation",
+      "overrides": {
+        "imgsz": 896,
+        "epochs": 90,
+        "mosaic": 0.1,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "amp": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "_comment_version": "version 为 null 时默认跟随最新的 predict 结果；也可以写成 version001 这类固定版本。",
+  "_comment_postprocess_version": "postprocess_version 可写成 pp001；与 version 一起定位具体 predict 目录。留空时默认跟随最新匹配结果。",
+  "_comment_predict_name": "predict_name 作为 predict 目录名前缀使用；不写 version 时会自动匹配最新的同前缀 predict 目录。",
+  "_comment_conf_threshold": "conf_threshold 为 null 时，compare 默认回退使用 predict 的 conf 阈值；也可以在这里单独指定显示阈值。",
+  "species": "youge",
+  "split": "train",
+  "predict_name": "youge_predict",
+  "before_dir": null,
+  "after_dir": null,
+  "labels_dir": null,
+  "project": "runs/compare",
+  "name": "youge_compare",
+  "version": "version003",
+  "postprocess_version": "pp007",
+  "conf_threshold": null,
+  "layout": "vertical",
+  "exist_ok": true
+}

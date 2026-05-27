@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 358" role="img" aria-label="多版本正常品误剔率对比">
+<style>
+  .grid-line { stroke: #e2e8f0; stroke-width: 1; }
+  .axis-line, .tick-line { stroke: #94a3b8; stroke-width: 1.2; }
+  .axis-label { fill: #64748b; font-size: 12px; font-family: 'Segoe UI', sans-serif; }
+  .point-label { font-size: 11px; font-weight: 600; font-family: 'Segoe UI', sans-serif; }
+  .peak-ring { fill: none; stroke-width: 2; }
+  .point-max { paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round; }
+</style>
+
+<line x1="72" y1="54.00" x2="832" y2="54.00" class="grid-line"></line>
+<text x="62" y="58.00" text-anchor="end" class="axis-label">0.0114</text>
+<line x1="72" y1="102.00" x2="832" y2="102.00" class="grid-line"></line>
+<text x="62" y="106.00" text-anchor="end" class="axis-label">0.0092</text>
+<line x1="72" y1="150.00" x2="832" y2="150.00" class="grid-line"></line>
+<text x="62" y="154.00" text-anchor="end" class="axis-label">0.0070</text>
+<line x1="72" y1="198.00" x2="832" y2="198.00" class="grid-line"></line>
+<text x="62" y="202.00" text-anchor="end" class="axis-label">0.0048</text>
+<line x1="72" y1="246.00" x2="832" y2="246.00" class="grid-line"></line>
+<text x="62" y="250.00" text-anchor="end" class="axis-label">0.0026</text>
+<line x1="72" y1="294.00" x2="832" y2="294.00" class="grid-line"></line>
+<text x="62" y="298.00" text-anchor="end" class="axis-label">0.0004</text>
+    <line x1="72" y1="54" x2="72" y2="294" class="axis-line"></line>
+    <line x1="72" y1="294" x2="832" y2="294" class="axis-line"></line>
+<line x1="72.00" y1="294" x2="72.00" y2="300" class="tick-line"></line>
+<text x="72.00" y="318" text-anchor="middle" class="axis-label">0.7</text>
+<line x1="110.00" y1="294" x2="110.00" y2="300" class="tick-line"></line>
+<text x="110.00" y="318" text-anchor="middle" class="axis-label">0.71</text>
+<line x1="148.00" y1="294" x2="148.00" y2="300" class="tick-line"></line>
+<text x="148.00" y="318" text-anchor="middle" class="axis-label">0.72</text>
+<line x1="186.00" y1="294" x2="186.00" y2="300" class="tick-line"></line>
+<text x="186.00" y="318" text-anchor="middle" class="axis-label">0.73</text>
+<line x1="224.00" y1="294" x2="224.00" y2="300" class="tick-line"></line>
+<text x="224.00" y="318" text-anchor="middle" class="axis-label">0.74</text>
+<line x1="262.00" y1="294" x2="262.00" y2="300" class="tick-line"></line>
+<text x="262.00" y="318" text-anchor="middle" class="axis-label">0.75</text>
+<line x1="300.00" y1="294" x2="300.00" y2="300" class="tick-line"></line>
+<text x="300.00" y="318" text-anchor="middle" class="axis-label">0.76</text>
+<line x1="338.00" y1="294" x2="338.00" y2="300" class="tick-line"></line>
+<text x="338.00" y="318" text-anchor="middle" class="axis-label">0.77</text>
+<line x1="376.00" y1="294" x2="376.00" y2="300" class="tick-line"></line>
+<text x="376.00" y="318" text-anchor="middle" class="axis-label">0.78</text>
+<line x1="414.00" y1="294" x2="414.00" y2="300" class="tick-line"></line>
+<text x="414.00" y="318" text-anchor="middle" class="axis-label">0.79</text>
+<line x1="452.00" y1="294" x2="452.00" y2="300" class="tick-line"></line>
+<text x="452.00" y="318" text-anchor="middle" class="axis-label">0.8</text>
+<line x1="490.00" y1="294" x2="490.00" y2="300" class="tick-line"></line>
+<text x="490.00" y="318" text-anchor="middle" class="axis-label">0.81</text>
+<line x1="528.00" y1="294" x2="528.00" y2="300" class="tick-line"></line>
+<text x="528.00" y="318" text-anchor="middle" class="axis-label">0.82</text>
+<line x1="566.00" y1="294" x2="566.00" y2="300" class="tick-line"></line>
+<text x="566.00" y="318" text-anchor="middle" class="axis-label">0.83</text>
+<line x1="604.00" y1="294" x2="604.00" y2="300" class="tick-line"></line>
+<text x="604.00" y="318" text-anchor="middle" class="axis-label">0.84</text>
+<line x1="642.00" y1="294" x2="642.00" y2="300" class="tick-line"></line>
+<text x="642.00" y="318" text-anchor="middle" class="axis-label">0.85</text>
+<line x1="680.00" y1="294" x2="680.00" y2="300" class="tick-line"></line>
+<text x="680.00" y="318" text-anchor="middle" class="axis-label">0.86</text>
+<line x1="718.00" y1="294" x2="718.00" y2="300" class="tick-line"></line>
+<text x="718.00" y="318" text-anchor="middle" class="axis-label">0.87</text>
+<line x1="756.00" y1="294" x2="756.00" y2="300" class="tick-line"></line>
+<text x="756.00" y="318" text-anchor="middle" class="axis-label">0.88</text>
+<line x1="794.00" y1="294" x2="794.00" y2="300" class="tick-line"></line>
+<text x="794.00" y="318" text-anchor="middle" class="axis-label">0.89</text>
+<line x1="832.00" y1="294" x2="832.00" y2="300" class="tick-line"></line>
+<text x="832.00" y="318" text-anchor="middle" class="axis-label">0.9</text>
+<polyline points="72.00,70.55 110.00,70.55 148.00,70.55 186.00,70.55 224.00,70.55 262.00,70.55 300.00,70.55 338.00,70.55 376.00,96.41 414.00,122.28 452.00,122.28 490.00,122.28 528.00,122.28 566.00,148.14 604.00,148.14 642.00,148.14 680.00,174.00 718.00,174.00 756.00,174.00 794.00,174.00 832.00,199.86" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="72.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="110.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="148.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="186.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="224.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="262.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="300.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="338.00" cy="70.55" r="4" fill="#2563eb"></circle>
+<circle cx="376.00" cy="96.41" r="4" fill="#2563eb"></circle>
+<circle cx="414.00" cy="122.28" r="4" fill="#2563eb"></circle>
+<circle cx="452.00" cy="122.28" r="4" fill="#2563eb"></circle>
+<circle cx="490.00" cy="122.28" r="4" fill="#2563eb"></circle>
+<circle cx="528.00" cy="122.28" r="4" fill="#2563eb"></circle>
+<circle cx="566.00" cy="148.14" r="4" fill="#2563eb"></circle>
+<circle cx="604.00" cy="148.14" r="4" fill="#2563eb"></circle>
+<circle cx="642.00" cy="148.14" r="4" fill="#2563eb"></circle>
+<circle cx="680.00" cy="174.00" r="4" fill="#2563eb"></circle>
+<circle cx="718.00" cy="174.00" r="4" fill="#2563eb"></circle>
+<circle cx="756.00" cy="174.00" r="4" fill="#2563eb"></circle>
+<circle cx="794.00" cy="174.00" r="4" fill="#2563eb"></circle>
+<circle cx="832.00" cy="199.86" r="4" fill="#2563eb"></circle>
+<circle cx="832.00" cy="199.86" r="8" class="peak-ring" stroke="#2563eb"></circle>
+<text x="832.00" y="181.86" text-anchor="middle" class="point-label point-max" fill="#2563eb">version002 normal=0.0047 @ 0.9</text>
+<polyline points="72.00,174.00 110.00,174.00 148.00,174.00 186.00,174.00 224.00,174.00 262.00,174.00 300.00,225.72 338.00,225.72 376.00,251.59 414.00,251.59 452.00,251.59 490.00,251.59 528.00,251.59 566.00,277.45 604.00,277.45 642.00,277.45 680.00,277.45 718.00,277.45 756.00,277.45 794.00,277.45 832.00,277.45" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="72.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="110.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="148.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="186.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="224.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="262.00" cy="174.00" r="4" fill="#dc2626"></circle>
+<circle cx="300.00" cy="225.72" r="4" fill="#dc2626"></circle>
+<circle cx="338.00" cy="225.72" r="4" fill="#dc2626"></circle>
+<circle cx="376.00" cy="251.59" r="4" fill="#dc2626"></circle>
+<circle cx="414.00" cy="251.59" r="4" fill="#dc2626"></circle>
+<circle cx="452.00" cy="251.59" r="4" fill="#dc2626"></circle>
+<circle cx="490.00" cy="251.59" r="4" fill="#dc2626"></circle>
+<circle cx="528.00" cy="251.59" r="4" fill="#dc2626"></circle>
+<circle cx="566.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="604.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="642.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="680.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="718.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="756.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="794.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="832.00" cy="277.45" r="4" fill="#dc2626"></circle>
+<circle cx="566.00" cy="277.45" r="8" class="peak-ring" stroke="#dc2626"></circle>
+<text x="566.00" y="259.45" text-anchor="middle" class="point-label point-max" fill="#dc2626">version003 normal=0.0012 @ 0.83</text>
+  
+</svg>
+

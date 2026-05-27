@@ -1,0 +1,21 @@
+{
+  "species": "youge",
+  "split": "both",
+  "predict_name": "youge_predict",
+  "image_dir": null,
+  "predict_image_dir": null,
+  "gt_labels_dir": null,
+  "pred_labels_dir": null,
+  "project": "runs/opt-class",
+  "name": "youge_opt_class_report",
+  "version": null,
+  "postprocess_version": null,
+  "postprocess_versions": ["pp001"],
+  "versions": ["version008"],
+  "conf_thresholds": ["0.50-0.70:0.01"],
+
+  "conf_threshold": null,
+  "iou_threshold": 0.5,
+  "max_items": null,
+  "exist_ok": true
+}

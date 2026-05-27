@@ -1,0 +1,23 @@
+{
+  "epochs": 120,
+  "imgsz": 768,
+  "batch": 4,
+  "device": "0",
+  "workers": 4,
+  "project": "runs/train",
+  "name": "youge_yolo11n",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.2,
+  "cache": false,
+  "exist_ok": true,
+  "amp": false,
+  "report_group": "materialized_2026-05-26_10_54_59",
+  "report_label": "epochs120_imgsz768_conservative",
+  "report_description": "提升分辨率至768，配合120轮训练，测试高分辨率对边缘目标稳定性的影响。",
+  "extra_train_args": {
+    "translate": 0.05,
+    "scale": 0.25,
+    "erasing": 0.1
+  }
+}

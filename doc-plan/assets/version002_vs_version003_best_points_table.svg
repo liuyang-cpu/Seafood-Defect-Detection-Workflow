@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="380" viewBox="0 0 1800 380" role="img" aria-label="version002 vs version003 最优点汇总表">
+<style>
+  .bg { fill: #ffffff; }
+  .title { fill: #111827; font-size: 30px; font-weight: 700; font-family: 'Segoe UI', sans-serif; }
+  .sub { fill: #6b7280; font-size: 15px; font-family: 'Segoe UI', sans-serif; }
+  .head { fill: #f8fafc; stroke: #d1d5db; stroke-width: 1; }
+  .cell { fill: #ffffff; stroke: #e5e7eb; stroke-width: 1; }
+  .cell-alt { fill: #fcfcfd; stroke: #e5e7eb; stroke-width: 1; }
+  .htext { fill: #111827; font-size: 18px; font-weight: 700; font-family: 'Segoe UI', sans-serif; }
+  .vtext { fill: #111827; font-size: 22px; font-weight: 700; font-family: 'Segoe UI', sans-serif; }
+  .ctext { fill: #1f2937; font-size: 20px; font-family: 'Segoe UI', sans-serif; }
+</style>
+<rect class="bg" x="0" y="0" width="1800" height="380" />
+<text x="80" y="58" class="title">version002 vs version003 最优点汇总</text>
+<text x="80" y="88" class="sub">格式：最佳阈值 conf | 对应指标值</text>
+<rect class="head" x="80" y="130" width="220" height="72" />
+<rect class="head" x="300" y="130" width="320" height="72" />
+<rect class="head" x="620" y="130" width="320" height="72" />
+<rect class="head" x="940" y="130" width="320" height="72" />
+<rect class="head" x="1260" y="130" width="320" height="72" />
+<text x="98" y="174" class="htext">版本</text>
+<text x="318" y="174" class="htext">缺陷筛出率最高</text>
+<text x="638" y="174" class="htext">缺陷漏检率最低</text>
+<text x="958" y="174" class="htext">计数误差最小</text>
+<text x="1278" y="174" class="htext">正常品误剔率最低</text>
+<rect class="cell" x="80" y="202" width="220" height="96" />
+<rect class="cell" x="300" y="202" width="320" height="96" />
+<rect class="cell" x="620" y="202" width="320" height="96" />
+<rect class="cell" x="940" y="202" width="320" height="96" />
+<rect class="cell" x="1260" y="202" width="320" height="96" />
+<text x="98" y="258" class="vtext">version002</text>
+<text x="318" y="258" class="ctext">conf=0.70 | 0.9701</text>
+<text x="638" y="258" class="ctext">conf=0.70 | 0.0299</text>
+<text x="958" y="258" class="ctext">conf=0.89 | 9</text>
+<text x="1278" y="258" class="ctext">conf=0.90 | 0.0047</text>
+<rect class="cell-alt" x="80" y="298" width="220" height="96" />
+<rect class="cell-alt" x="300" y="298" width="320" height="96" />
+<rect class="cell-alt" x="620" y="298" width="320" height="96" />
+<rect class="cell-alt" x="940" y="298" width="320" height="96" />
+<rect class="cell-alt" x="1260" y="298" width="320" height="96" />
+<text x="98" y="354" class="vtext">version003</text>
+<text x="318" y="354" class="ctext">conf=0.70 | 0.9397</text>
+<text x="638" y="354" class="ctext">conf=0.70 | 0.0603</text>
+<text x="958" y="354" class="ctext">conf=0.80 | 2</text>
+<text x="1278" y="354" class="ctext">conf=0.83 | 0.0012</text>
+</svg>
+

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="430" viewBox="0 0 1320 430" role="img" aria-label="version003 趋势图结果表">
+<style>
+  .bg { fill: #ffffff; }
+  .head { fill: #eef2f6; stroke: #cfd6df; stroke-width: 1; }
+  .cell { fill: #ffffff; stroke: #d8dee6; stroke-width: 1; }
+  .htext { fill: #111827; font-size: 21px; font-weight: 700; font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif; }
+  .mtext { fill: #111827; font-size: 19px; font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif; }
+  .btext { fill: #111827; font-size: 19px; font-weight: 700; font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif; }
+</style>
+<rect class="bg" x="0" y="0" width="1320" height="430" />
+<rect class="head" x="18" y="12" width="428" height="74" />
+<text x="232" y="58" text-anchor="middle" class="htext">指标</text>
+<rect class="head" x="446" y="12" width="428" height="74" />
+<text x="660" y="58" text-anchor="middle" class="htext">含义</text>
+<rect class="head" x="874" y="12" width="428" height="74" />
+<text x="1088" y="58" text-anchor="middle" class="htext">最优阈值</text>
+<rect class="cell" x="18" y="86" width="428" height="82" />
+<text x="232" y="136" text-anchor="middle" class="mtext">绝对计数误差</text>
+<rect class="cell" x="446" y="86" width="428" height="82" />
+<text x="660" y="136" text-anchor="middle" class="mtext">反映整体计数偏差</text>
+<rect class="cell" x="874" y="86" width="428" height="82" />
+<text x="1088" y="136" text-anchor="middle" class="btext">0.80</text>
+<rect class="cell" x="18" y="168" width="428" height="82" />
+<text x="232" y="218" text-anchor="middle" class="mtext">缺陷筛出率</text>
+<rect class="cell" x="446" y="168" width="428" height="82" />
+<text x="660" y="218" text-anchor="middle" class="mtext">缺陷对象被成功检出比例</text>
+<rect class="cell" x="874" y="168" width="428" height="82" />
+<text x="1088" y="218" text-anchor="middle" class="btext">0.70 ~ 0.71</text>
+<rect class="cell" x="18" y="250" width="428" height="82" />
+<text x="232" y="300" text-anchor="middle" class="mtext">缺陷漏检率</text>
+<rect class="cell" x="446" y="250" width="428" height="82" />
+<text x="660" y="300" text-anchor="middle" class="mtext">缺陷对象未被检出的比例</text>
+<rect class="cell" x="874" y="250" width="428" height="82" />
+<text x="1088" y="300" text-anchor="middle" class="btext">0.70</text>
+<rect class="cell" x="18" y="332" width="428" height="82" />
+<text x="232" y="382" text-anchor="middle" class="mtext">正常品误剔率</text>
+<rect class="cell" x="446" y="332" width="428" height="82" />
+<text x="660" y="382" text-anchor="middle" class="mtext">normal 被误判为缺陷的比例</text>
+<rect class="cell" x="874" y="332" width="428" height="82" />
+<text x="1088" y="382" text-anchor="middle" class="btext">0.83</text>
+</svg>
+

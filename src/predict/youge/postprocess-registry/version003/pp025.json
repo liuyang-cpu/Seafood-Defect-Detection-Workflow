@@ -1,0 +1,43 @@
+{
+  "species": "youge",
+  "model_version": "version003",
+  "postprocess_version": "pp025",
+  "fingerprint": "sha256:a5f862120f46fe4ee518579cc88e349dfb1957dd4612bbfcc345e99693b8a366",
+  "created_at": "2026-05-22T07:35:53.115500+00:00",
+  "rules": {
+    "horizontal_rule": false,
+    "same_class_contain_suppression": true,
+    "contain_ratio_threshold": 0.5,
+    "adjacent_frame_dedup": true,
+    "adjacent_frame_x_overlap_threshold": 0.35,
+    "adjacent_frame_delta_y": 250.0,
+    "adjacent_frame_height_min": 35.64,
+    "adjacent_frame_height_max": 119.95,
+    "adjacent_frame_non_bottom_y2_correction": 0.0,
+    "adjacent_frame_bottom_touch_margin_px": 3.0,
+    "adjacent_frame_x_tolerance": 12.0,
+    "adjacent_frame_max_width_ratio": 1.5,
+    "horizontal_edge_touch_px": 3.0,
+    "horizontal_flat_ratio_threshold_short": 1.65,
+    "horizontal_flat_ratio_threshold": 1.85,
+    "horizontal_edge_span_threshold_short": 0.7,
+    "horizontal_edge_span_threshold": 0.0,
+    "horizontal_penalty_factor": 0.5,
+    "vertical_rule": false,
+    "vertical_intact_aspect_ratio_threshold": 1.2,
+    "vertical_edge_span_threshold": 0.7,
+    "vertical_edge_span_threshold_thin": 0.82,
+    "vertical_defective_penalty_factor": 0.5,
+    "vertical_edge_margin_px": 3.0
+  },
+  "export_options": {
+    "export_penalty_hits": true,
+    "penalty_hits_dirname": "penalty_hits",
+    "render_adjacent_frame_guides": true
+  },
+  "examples": {
+    "predict_run_name": "youge_predict_version003_pp025",
+    "weights": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\runs\\train\\youge_yolo11n_version003\\weights\\best.pt",
+    "source": null
+  }
+}

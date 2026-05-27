@@ -1,0 +1,336 @@
+{
+  "task_context": {
+    "project": "youge",
+    "model_family": "YOLO11n",
+    "dataset_name": "youge",
+    "problem_summary": [
+      "相邻帧截断框误分类",
+      "边缘目标稳定性不足",
+      "小目标更敏感"
+    ],
+    "primary_objective": "优先改善截断目标和边缘目标的检测稳定性，同时关注总体 mAP50-95",
+    "notes": [
+      "相机固定",
+      "场景几何变化较小",
+      "增强不宜过强"
+    ]
+  },
+  "baseline_run": {
+    "label": "epochs100_augM_mosaic005",
+    "version": "version012",
+    "run_name": "youge_yolo11n_version012",
+    "metrics": {
+      "precision": 0.90895,
+      "recall": 0.9179,
+      "map50": 0.97593,
+      "map50_95": 0.9466
+    },
+    "epochs_completed": 100,
+    "best_epoch": 91,
+    "elapsed_seconds": 5352.68,
+    "train_config": {
+      "epochs": 100,
+      "imgsz": 640,
+      "batch": 2,
+      "workers": 1,
+      "patience": 50,
+      "mosaic": 0.05,
+      "amp": true,
+      "extra_train_args": {
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "mixup": 0.0,
+        "copy_paste": 0.0,
+        "degrees": 0.0,
+        "shear": 0.0,
+        "perspective": 0.0
+      }
+    }
+  },
+  "search_space": {
+    "allowed_params": [
+      "imgsz",
+      "epochs",
+      "mosaic",
+      "translate",
+      "scale",
+      "erasing",
+      "amp"
+    ],
+    "param_space": {
+      "imgsz": {
+        "type": "categorical",
+        "values": [
+          640,
+          768,
+          896
+        ]
+      },
+      "epochs": {
+        "type": "int",
+        "min": 60,
+        "max": 140,
+        "step": 20
+      },
+      "mosaic": {
+        "type": "float",
+        "min": 0.0,
+        "max": 0.2
+      },
+      "translate": {
+        "type": "float",
+        "min": 0.02,
+        "max": 0.08
+      },
+      "scale": {
+        "type": "float",
+        "min": 0.15,
+        "max": 0.35
+      },
+      "erasing": {
+        "type": "float",
+        "min": 0.0,
+        "max": 0.2
+      },
+      "amp": {
+        "type": "categorical",
+        "values": [
+          false,
+          true
+        ]
+      }
+    },
+    "frozen_defaults": {
+      "_comment": "这些项建议先固定，不要一开始就放进搜索空间里。",
+      "mixup": 0.0,
+      "copy_paste": 0.0,
+      "degrees": 0.0,
+      "shear": 0.0,
+      "perspective": 0.0,
+      "flipud": 0.0
+    }
+  },
+  "history_summary": [
+    {
+      "label": "epochs80_imgsz896_augL_mosaic01",
+      "version": "version011",
+      "run_name": "youge_yolo11n_version011",
+      "metrics": {
+        "precision": 0.89781,
+        "recall": 0.94091,
+        "map50": 0.97559,
+        "map50_95": 0.94887
+      },
+      "epochs_completed": 80,
+      "best_epoch": 51,
+      "elapsed_seconds": 4316.2,
+      "train_config": {
+        "epochs": 80,
+        "imgsz": 896,
+        "batch": 2,
+        "workers": 1,
+        "patience": 50,
+        "mosaic": 0.1,
+        "amp": true,
+        "extra_train_args": {
+          "translate": 0.02,
+          "scale": 0.15,
+          "erasing": 0.05,
+          "mixup": 0.0,
+          "copy_paste": 0.0,
+          "degrees": 0.0,
+          "shear": 0.0,
+          "perspective": 0.0
+        }
+      }
+    },
+    {
+      "label": "epochs80_imgsz768_augL_mosaic01",
+      "version": "version010",
+      "run_name": "youge_yolo11n_version010",
+      "metrics": {
+        "precision": 0.94395,
+        "recall": 0.94068,
+        "map50": 0.9809,
+        "map50_95": 0.95271
+      },
+      "epochs_completed": 80,
+      "best_epoch": 70,
+      "elapsed_seconds": 4204.05,
+      "train_config": {
+        "epochs": 80,
+        "imgsz": 768,
+        "batch": 2,
+        "workers": 1,
+        "patience": 50,
+        "mosaic": 0.1,
+        "amp": true,
+        "extra_train_args": {
+          "translate": 0.02,
+          "scale": 0.15,
+          "erasing": 0.05,
+          "mixup": 0.0,
+          "copy_paste": 0.0,
+          "degrees": 0.0,
+          "shear": 0.0,
+          "perspective": 0.0
+        }
+      }
+    },
+    {
+      "label": "epochs80_augL_mosaic01",
+      "version": "version009",
+      "run_name": "youge_yolo11n_version009",
+      "metrics": {
+        "precision": 0.92927,
+        "recall": 0.91533,
+        "map50": 0.97657,
+        "map50_95": 0.94495
+      },
+      "epochs_completed": 80,
+      "best_epoch": 80,
+      "elapsed_seconds": 3779.38,
+      "train_config": {
+        "epochs": 80,
+        "imgsz": 640,
+        "batch": 2,
+        "workers": 1,
+        "patience": 50,
+        "mosaic": 0.1,
+        "amp": true,
+        "extra_train_args": {
+          "translate": 0.02,
+          "scale": 0.15,
+          "erasing": 0.05,
+          "mixup": 0.0,
+          "copy_paste": 0.0,
+          "degrees": 0.0,
+          "shear": 0.0,
+          "perspective": 0.0
+        }
+      }
+    },
+    {
+      "label": "version008",
+      "version": "version008",
+      "run_name": "youge_yolo11n_version008",
+      "metrics": {
+        "precision": 0.9592,
+        "recall": 0.9382,
+        "map50": 0.98873,
+        "map50_95": 0.96108
+      },
+      "epochs_completed": 90,
+      "best_epoch": 72,
+      "elapsed_seconds": 468.958,
+      "train_config": {
+        "epochs": 90,
+        "imgsz": 640,
+        "batch": 1,
+        "workers": 0,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {
+          "translate": 0.1,
+          "scale": 0.5,
+          "erasing": 0.4,
+          "mixup": 0.0,
+          "copy_paste": 0.0,
+          "degrees": 0.0,
+          "shear": 0.0,
+          "perspective": 0.0
+        }
+      }
+    },
+    {
+      "label": "epochs_60",
+      "version": "version007",
+      "run_name": "youge_yolo11n_version007",
+      "metrics": {
+        "precision": 0.96237,
+        "recall": 0.94401,
+        "map50": 0.98789,
+        "map50_95": 0.9605
+      },
+      "epochs_completed": 60,
+      "best_epoch": 56,
+      "elapsed_seconds": 1601.27,
+      "train_config": {
+        "epochs": 60,
+        "imgsz": 640,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    },
+    {
+      "label": "imgsz_896",
+      "version": "version006",
+      "run_name": "youge_yolo11n_version006",
+      "metrics": {
+        "precision": 0.95182,
+        "recall": 0.94385,
+        "map50": 0.9804,
+        "map50_95": 0.94939
+      },
+      "epochs_completed": 30,
+      "best_epoch": 29,
+      "elapsed_seconds": 931.043,
+      "train_config": {
+        "epochs": 30,
+        "imgsz": 896,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    },
+    {
+      "label": "imgsz_768",
+      "version": "version005",
+      "run_name": "youge_yolo11n_version005",
+      "metrics": {
+        "precision": 0.96157,
+        "recall": 0.92715,
+        "map50": 0.98047,
+        "map50_95": 0.94739
+      },
+      "epochs_completed": 30,
+      "best_epoch": 27,
+      "elapsed_seconds": 738.06,
+      "train_config": {
+        "epochs": 30,
+        "imgsz": 768,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    }
+  ],
+  "budget_constraints": {
+    "max_recommended_runs": 5,
+    "max_epochs_per_run": 120,
+    "max_imgsz": 896,
+    "max_batch": 8,
+    "allow_new_params": false,
+    "require_non_duplicate_runs": true
+  },
+  "planner_rules": {
+    "must_stay_within_search_space": true,
+    "must_not_repeat_history": true,
+    "prefer_conservative_narrowing": true,
+    "focus_on_business_problem_over_raw_map": true,
+    "max_observations": 5,
+    "max_recommended_runs": 5
+  }
+}

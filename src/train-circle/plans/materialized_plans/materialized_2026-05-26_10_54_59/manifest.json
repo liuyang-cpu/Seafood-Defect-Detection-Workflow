@@ -1,0 +1,127 @@
+{
+  "created_at": "20260526_105459",
+  "plan": "llm-guided",
+  "source": "train-circle",
+  "base_config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge.json",
+  "search_space_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge_search_space.json",
+  "planner_response_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\planner_runs\\llm_plan_2026-05-26_10_51_35\\planner_response.json",
+  "payload_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\planner_runs\\llm_plan_2026-05-26_10_51_35\\planner_payload.json",
+  "observations": [
+    "amp=true 在所有历史实验中均导致 mAP50-95 下降，应固定为 false",
+    "延长训练轮数从60到90带来微小收益，进一步延长至120可能仍可提升",
+    "更高分辨率（768/896）在短训练或 amp=true 下未体现优势，但结合更长训练和 amp=false 可能改善边缘目标",
+    "保守增强（translate≤0.05, scale≤0.25, erasing≤0.1）符合业务场景中增强不宜过强的要求，但需与适中 mosaic 配合以避免欠拟合",
+    "当前搜索空间限制 mosaic≤0.2，而历史最优基线使用 mosaic=0.5，需在允许范围内寻找合适 mosaic 值"
+  ],
+  "range_updates": {
+    "translate": [
+      0.02,
+      0.05
+    ],
+    "scale": [
+      0.15,
+      0.25
+    ],
+    "erasing": [
+      0.0,
+      0.1
+    ],
+    "mosaic": [
+      0.1,
+      0.2
+    ],
+    "epochs": [
+      90,
+      120
+    ],
+    "imgsz": [
+      640,
+      768
+    ]
+  },
+  "frozen_params": {
+    "amp": false,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0
+  },
+  "experiments": [
+    {
+      "index": 1,
+      "label": "epochs120_imgsz640_conservative",
+      "description": "延长训练至120轮，采用保守增强，验证在更长训练下是否进一步提升且增强是否损害稳定性。",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_plans\\materialized_2026-05-26_10_54_59\\configs\\exp_001.json",
+      "overrides": {
+        "epochs": 120,
+        "imgsz": 640,
+        "mosaic": 0.2,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "amp": false
+      }
+    },
+    {
+      "index": 2,
+      "label": "epochs120_imgsz768_conservative",
+      "description": "提升分辨率至768，配合120轮训练，测试高分辨率对边缘目标稳定性的影响。",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_plans\\materialized_2026-05-26_10_54_59\\configs\\exp_002.json",
+      "overrides": {
+        "epochs": 120,
+        "imgsz": 768,
+        "mosaic": 0.2,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "amp": false
+      }
+    },
+    {
+      "index": 3,
+      "label": "epochs90_imgsz640_mosaic01_loweraug",
+      "description": "降低增强强度，使用 translate=0.02, scale=0.15, erasing=0.05，验证更保守增强在基线 epochs 和 mosaic 下的效果。",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_plans\\materialized_2026-05-26_10_54_59\\configs\\exp_003.json",
+      "overrides": {
+        "epochs": 90,
+        "imgsz": 640,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05,
+        "amp": false
+      }
+    },
+    {
+      "index": 4,
+      "label": "epochs90_imgsz640_mosaic02_noerasing",
+      "description": "尝试完全关闭 erasing，同时维持中等 mosaic 和 translate/scale，评估 erasing 对截断目标的影响。",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_plans\\materialized_2026-05-26_10_54_59\\configs\\exp_004.json",
+      "overrides": {
+        "epochs": 90,
+        "imgsz": 640,
+        "mosaic": 0.2,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.0,
+        "amp": false
+      }
+    },
+    {
+      "index": 5,
+      "label": "epochs90_imgsz768_mosaic01_augmid",
+      "description": "结合768分辨率和中等增强，观察是否有协同作用改善稳定性。",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_plans\\materialized_2026-05-26_10_54_59\\configs\\exp_005.json",
+      "overrides": {
+        "epochs": 90,
+        "imgsz": 768,
+        "mosaic": 0.1,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "amp": false
+      }
+    }
+  ]
+}

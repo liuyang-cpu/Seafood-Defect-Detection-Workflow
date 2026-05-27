@@ -1,0 +1,23 @@
+{
+  "epochs": 90,
+  "imgsz": 640,
+  "batch": 4,
+  "device": "0",
+  "workers": 4,
+  "project": "runs/train",
+  "name": "youge_yolo11n",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.1,
+  "cache": false,
+  "exist_ok": true,
+  "amp": false,
+  "report_group": "materialized_2026-05-26_10_54_59",
+  "report_label": "epochs90_imgsz640_mosaic01_loweraug",
+  "report_description": "降低增强强度，使用 translate=0.02, scale=0.15, erasing=0.05，验证更保守增强在基线 epochs 和 mosaic 下的效果。",
+  "extra_train_args": {
+    "translate": 0.02,
+    "scale": 0.15,
+    "erasing": 0.05
+  }
+}

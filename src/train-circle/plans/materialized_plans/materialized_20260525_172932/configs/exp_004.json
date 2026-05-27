@@ -1,0 +1,23 @@
+{
+  "epochs": 100,
+  "imgsz": 640,
+  "batch": 4,
+  "device": "0",
+  "workers": 4,
+  "project": "runs/train",
+  "name": "youge_yolo11n",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.05,
+  "cache": false,
+  "exist_ok": true,
+  "amp": true,
+  "report_group": "materialized_20260525_172932",
+  "report_label": "epochs100_augM_mosaic005",
+  "report_description": "延长训练至 100 轮并适度增加增强，观察泛化天花板",
+  "extra_train_args": {
+    "translate": 0.05,
+    "scale": 0.25,
+    "erasing": 0.1
+  }
+}

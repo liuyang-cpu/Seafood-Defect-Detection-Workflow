@@ -1,0 +1,11 @@
+{
+  "provider": "deepseek",
+  "model": "deepseek-v4-pro",
+  "base_url": "https://api.deepseek.com",
+  "api_key": "sk-7b0553587ffc4ccfa98ed6fc198068ab",
+  "api_key_env": "DEEPSEEK_API_KEY",
+  "notes": [
+    "建议优先使用 api_key_env，通过环境变量提供密钥。",
+    "如果你坚持放在 JSON 里，可以直接填写 api_key。"
+  ]
+}

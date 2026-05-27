@@ -1,0 +1,104 @@
+{
+  "created_at": "20260525_172932",
+  "plan": "llm-guided",
+  "source": "train-circle",
+  "base_config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge.json",
+  "search_space_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge_search_space.json",
+  "planner_response_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\llm_plan_20260525_171258\\planner_response.json",
+  "payload_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\llm_plan_20260525_171258\\planner_payload.json",
+  "observations": [
+    "epochs 从 30 增至 60 使 mAP50-95 从 0.949 提升至 0.9605，是所有修改中收益最大的变化",
+    "在 30 epochs 下，imgsz 768/896 的 mAP50-95 略低于 640 但 precision 更高，暗示高分辨率可能需更长训练才能体现优势",
+    "当前数据无增强配置，鉴于问题为截断 / 边缘目标，保守引入轻微 translate/scale/erasing 可能提升鲁棒性"
+  ],
+  "range_updates": {
+    "epochs": [
+      80,
+      120
+    ],
+    "mosaic": [
+      0.0,
+      0.1
+    ],
+    "translate": [
+      0.02,
+      0.05
+    ],
+    "scale": [
+      0.15,
+      0.25
+    ],
+    "erasing": [
+      0.0,
+      0.1
+    ]
+  },
+  "frozen_params": {
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "flipud": 0.0
+  },
+  "experiments": [
+    {
+      "index": 1,
+      "label": "epochs80_augL_mosaic01",
+      "description": "验证更保守增强与低 mosaic 下 80 轮训练效果，建立新增强基线",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_20260525_172932\\configs\\exp_001.json",
+      "overrides": {
+        "epochs": 80,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05,
+        "amp": true
+      }
+    },
+    {
+      "index": 2,
+      "label": "epochs80_imgsz768_augL_mosaic01",
+      "description": "测试高分辨率在充分训练和保守增强下是否改善边缘目标",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_20260525_172932\\configs\\exp_002.json",
+      "overrides": {
+        "imgsz": 768,
+        "epochs": 80,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05,
+        "amp": true
+      }
+    },
+    {
+      "index": 3,
+      "label": "epochs80_imgsz896_augL_mosaic01",
+      "description": "探索更高分辨率搭配 80 轮训练是否有额外增益",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_20260525_172932\\configs\\exp_003.json",
+      "overrides": {
+        "imgsz": 896,
+        "epochs": 80,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05,
+        "amp": true
+      }
+    },
+    {
+      "index": 4,
+      "label": "epochs100_augM_mosaic005",
+      "description": "延长训练至 100 轮并适度增加增强，观察泛化天花板",
+      "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\materialized_20260525_172932\\configs\\exp_004.json",
+      "overrides": {
+        "epochs": 100,
+        "mosaic": 0.05,
+        "translate": 0.05,
+        "scale": 0.25,
+        "erasing": 0.1,
+        "amp": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "observations": [
+    "epochs从30提升至80~100显著提高mAP50-95，但基线100 epoch未优于部分80 epoch实验，可能增强组合不是最优",
+    "imgsz=768在保守增强下优于640和896，可能与检测目标尺寸和场景几何变化较小有关",
+    "更强的增强（translate≥0.1, scale≥0.5, erasing≥0.4）在version008取得高mAP，但可能损害截断/边缘稳定性，与业务目标冲突",
+    "mosaic从0.05提升至0.1在保守增强下带来正向收益，但过高mosaic可能引入截断问题",
+    "amp对结果影响不明确，基本可固定为true以匹配基线"
+  ],
+  "frozen_params": {
+    "amp": true,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0
+  },
+  "range_updates": {
+    "epochs": [
+      80,
+      100,
+      120
+    ],
+    "imgsz": [
+      640,
+      768,
+      896
+    ],
+    "mosaic": [
+      0.0,
+      0.05,
+      0.1
+    ],
+    "translate": [
+      0.02,
+      0.05
+    ],
+    "scale": [
+      0.15,
+      0.25
+    ],
+    "erasing": [
+      0.0,
+      0.05,
+      0.1
+    ]
+  },
+  "recommended_runs": [
+    {
+      "label": "e100_im768_m01_aL_cons",
+      "reason": "在最佳imgsz=768基础上增加训练轮数至100，保持保守增强，验证收敛稳定性。",
+      "overrides": {
+        "epochs": 100,
+        "imgsz": 768,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05
+      }
+    },
+    {
+      "label": "e120_im768_m01_aL_cons",
+      "reason": "进一步延长训练至120轮，观察保守增强下是否有额外收益。",
+      "overrides": {
+        "epochs": 120,
+        "imgsz": 768,
+        "mosaic": 0.1,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05
+      }
+    },
+    {
+      "label": "e100_im896_m005_aL_mild",
+      "reason": "在imgsz=896下降低mosaic至0.05，使用较保守增强，探索高分辨率下更稳定的配置。",
+      "overrides": {
+        "epochs": 100,
+        "imgsz": 896,
+        "mosaic": 0.05,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.05
+      }
+    },
+    {
+      "label": "e100_im768_m0_aL_min",
+      "reason": "完全关闭mosaic，采用最小空间增强，验证截断/边缘目标是否进一步提升稳定性。",
+      "overrides": {
+        "epochs": 100,
+        "imgsz": 768,
+        "mosaic": 0.0,
+        "translate": 0.02,
+        "scale": 0.15,
+        "erasing": 0.0
+      }
+    }
+  ]
+}

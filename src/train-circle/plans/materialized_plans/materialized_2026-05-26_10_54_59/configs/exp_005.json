@@ -1,0 +1,23 @@
+{
+  "epochs": 90,
+  "imgsz": 768,
+  "batch": 4,
+  "device": "0",
+  "workers": 4,
+  "project": "runs/train",
+  "name": "youge_yolo11n",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.1,
+  "cache": false,
+  "exist_ok": true,
+  "amp": false,
+  "report_group": "materialized_2026-05-26_10_54_59",
+  "report_label": "epochs90_imgsz768_mosaic01_augmid",
+  "report_description": "结合768分辨率和中等增强，观察是否有协同作用改善稳定性。",
+  "extra_train_args": {
+    "translate": 0.05,
+    "scale": 0.25,
+    "erasing": 0.1
+  }
+}

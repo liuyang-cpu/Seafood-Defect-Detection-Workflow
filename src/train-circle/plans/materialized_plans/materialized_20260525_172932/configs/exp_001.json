@@ -1,0 +1,23 @@
+{
+  "epochs": 80,
+  "imgsz": 640,
+  "batch": 4,
+  "device": "0",
+  "workers": 4,
+  "project": "runs/train",
+  "name": "youge_yolo11n",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.1,
+  "cache": false,
+  "exist_ok": true,
+  "amp": true,
+  "report_group": "materialized_20260525_172932",
+  "report_label": "epochs80_augL_mosaic01",
+  "report_description": "验证更保守增强与低 mosaic 下 80 轮训练效果，建立新增强基线",
+  "extra_train_args": {
+    "translate": 0.02,
+    "scale": 0.15,
+    "erasing": 0.05
+  }
+}

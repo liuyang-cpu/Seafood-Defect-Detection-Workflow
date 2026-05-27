@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-05-26_10_51_35",
+  "provider": "deepseek",
+  "model": "deepseek-v4-pro",
+  "base_url": "https://api.deepseek.com",
+  "config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\config\\llm_planner.config.json",
+  "summary_csv": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\runs\\reports\\all_runs_latest\\summary.csv",
+  "search_space_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge_search_space.json",
+  "base_config_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\train_youge.json",
+  "payload_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\planner_runs\\llm_plan_2026-05-26_10_51_35\\planner_payload.json",
+  "planner_response_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\planner_runs\\llm_plan_2026-05-26_10_51_35\\planner_response.json",
+  "raw_response_path": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train-circle\\plans\\planner_runs\\llm_plan_2026-05-26_10_51_35\\openai_response.json"
+}

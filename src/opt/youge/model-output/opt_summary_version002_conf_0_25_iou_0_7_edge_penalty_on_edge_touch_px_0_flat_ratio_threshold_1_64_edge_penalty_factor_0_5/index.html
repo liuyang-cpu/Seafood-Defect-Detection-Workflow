@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Youge Conf Summary</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: 'Segoe UI', sans-serif; background: #f3f6fa; color: #0f172a; }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    .topline { margin: 0 0 18px; color: #334155; font-size: 14px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .card { background: #fff; border: 1px solid #dbe3ec; border-radius: 14px; padding: 16px; }
+    .label { color: #475569; font-size: 13px; }
+    .value { margin-top: 8px; font-size: 26px; font-weight: 700; }
+    .sub { margin-top: 6px; color: #475569; font-size: 13px; }
+    .chart-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-bottom: 20px; }
+    .chart-card { background: #fff; border: 1px solid #dbe3ec; border-radius: 16px; padding: 16px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05); }
+    .chart-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .chart-header h2 { margin: 0 0 6px; font-size: 20px; }
+    .chart-header p { margin: 0; color: #475569; font-size: 13px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 14px; justify-content: flex-end; }
+    .legend-item { display: inline-flex; align-items: center; gap: 8px; color: #334155; font-size: 13px; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 999px; display: inline-block; }
+    svg { width: 100%; height: auto; display: block; }
+    .grid-line { stroke: #e2e8f0; stroke-width: 1; }
+    .axis-line, .tick-line { stroke: #94a3b8; stroke-width: 1.2; }
+    .axis-label { fill: #64748b; font-size: 12px; }
+    .point-label { font-size: 11px; font-weight: 600; }
+    .peak-ring { fill: none; stroke-width: 2; }
+    .peak-max { stroke: #0f172a; }
+    .peak-min { stroke: #94a3b8; stroke-dasharray: 3 2; }
+    .point-max, .point-min { paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dbe3ec; border-radius: 14px; overflow: hidden; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; text-align: center; font-size: 14px; }
+    th { background: #eaf2fb; font-weight: 700; }
+    tr:nth-child(even) td { background: #f8fbff; }
+    a { color: #0369a1; text-decoration: none; }
+    @media (max-width: 1200px) { body { padding: 14px; } .chart-header { flex-direction: column; } .legend { justify-content: flex-start; } table { display: block; overflow-x: auto; white-space: nowrap; } }
+  </style>
+</head>
+<body>
+  <h1>Youge Confidence Sweep Report</h1>
+  <p class="topline">species=youge | split=val | predict_name=youge_predict_version002 | iou=0.5 | conf_count=16</p>
+  <p class="topline">model_version=version002 | conf=0.25 | iou=0.7 | edge_penalty=True | edge_touch_px=0 | flat_ratio_threshold=1.64 | edge_penalty_factor=0.5</p>
+  <section class="cards">
+    <div class="card"><div class="label">Best F1</div><div class="value">0.8645</div><div class="sub">conf=0.7</div></div>
+    <div class="card"><div class="label">Best Precision</div><div class="value">0.8986</div><div class="sub">conf=0.85</div></div>
+    <div class="card"><div class="label">Best Recall</div><div class="value">0.8704</div><div class="sub">conf=0.7</div></div>
+    <div class="card"><div class="label">Images</div><div class="value">871</div><div class="sub">GT boxes=2547</div></div>
+  </section>
+  <section class="chart-grid">
+<section class="chart-card">
+  <div class="chart-header"><div><h2>指标折线图</h2><p>直接比较不同 conf 下 Precision / Recall / F1 的变化</p></div><div class="legend"><div class="legend-item"><span class="legend-swatch" style="background:#0f766e;"></span>Precision</div><div class="legend-item"><span class="legend-swatch" style="background:#2563eb;"></span>Recall</div><div class="legend-item"><span class="legend-swatch" style="background:#dc2626;"></span>F1</div></div></div>
+  <svg id="metric-chart" viewBox="0 0 832 328" role="img" aria-label="指标折线图">
+<line x1="56" y1="24.00" x2="816" y2="24.00" class="grid-line"></line>
+<text x="46" y="28.00" text-anchor="end" class="axis-label">0.9054</text>
+<line x1="56" y1="76.00" x2="816" y2="76.00" class="grid-line"></line>
+<text x="46" y="80.00" text-anchor="end" class="axis-label">0.8858</text>
+<line x1="56" y1="128.00" x2="816" y2="128.00" class="grid-line"></line>
+<text x="46" y="132.00" text-anchor="end" class="axis-label">0.8662</text>
+<line x1="56" y1="180.00" x2="816" y2="180.00" class="grid-line"></line>
+<text x="46" y="184.00" text-anchor="end" class="axis-label">0.8467</text>
+<line x1="56" y1="232.00" x2="816" y2="232.00" class="grid-line"></line>
+<text x="46" y="236.00" text-anchor="end" class="axis-label">0.8271</text>
+<line x1="56" y1="284.00" x2="816" y2="284.00" class="grid-line"></line>
+<text x="46" y="288.00" text-anchor="end" class="axis-label">0.8075</text>
+    <line x1="56" y1="24" x2="56" y2="284" class="axis-line"></line>
+    <line x1="56" y1="284" x2="816" y2="284" class="axis-line"></line>
+<line x1="56.00" y1="284" x2="56.00" y2="290" class="tick-line"></line>
+<text x="56.00" y="308" text-anchor="middle" class="axis-label">0.7</text>
+<line x1="106.67" y1="284" x2="106.67" y2="290" class="tick-line"></line>
+<text x="106.67" y="308" text-anchor="middle" class="axis-label">0.71</text>
+<line x1="157.33" y1="284" x2="157.33" y2="290" class="tick-line"></line>
+<text x="157.33" y="308" text-anchor="middle" class="axis-label">0.72</text>
+<line x1="208.00" y1="284" x2="208.00" y2="290" class="tick-line"></line>
+<text x="208.00" y="308" text-anchor="middle" class="axis-label">0.73</text>
+<line x1="258.67" y1="284" x2="258.67" y2="290" class="tick-line"></line>
+<text x="258.67" y="308" text-anchor="middle" class="axis-label">0.74</text>
+<line x1="309.33" y1="284" x2="309.33" y2="290" class="tick-line"></line>
+<text x="309.33" y="308" text-anchor="middle" class="axis-label">0.75</text>
+<line x1="360.00" y1="284" x2="360.00" y2="290" class="tick-line"></line>
+<text x="360.00" y="308" text-anchor="middle" class="axis-label">0.76</text>
+<line x1="410.67" y1="284" x2="410.67" y2="290" class="tick-line"></line>
+<text x="410.67" y="308" text-anchor="middle" class="axis-label">0.77</text>
+<line x1="461.33" y1="284" x2="461.33" y2="290" class="tick-line"></line>
+<text x="461.33" y="308" text-anchor="middle" class="axis-label">0.78</text>
+<line x1="512.00" y1="284" x2="512.00" y2="290" class="tick-line"></line>
+<text x="512.00" y="308" text-anchor="middle" class="axis-label">0.79</text>
+<line x1="562.67" y1="284" x2="562.67" y2="290" class="tick-line"></line>
+<text x="562.67" y="308" text-anchor="middle" class="axis-label">0.8</text>
+<line x1="613.33" y1="284" x2="613.33" y2="290" class="tick-line"></line>
+<text x="613.33" y="308" text-anchor="middle" class="axis-label">0.81</text>
+<line x1="664.00" y1="284" x2="664.00" y2="290" class="tick-line"></line>
+<text x="664.00" y="308" text-anchor="middle" class="axis-label">0.82</text>
+<line x1="714.67" y1="284" x2="714.67" y2="290" class="tick-line"></line>
+<text x="714.67" y="308" text-anchor="middle" class="axis-label">0.83</text>
+<line x1="765.33" y1="284" x2="765.33" y2="290" class="tick-line"></line>
+<text x="765.33" y="308" text-anchor="middle" class="axis-label">0.84</text>
+<line x1="816.00" y1="284" x2="816.00" y2="290" class="tick-line"></line>
+<text x="816.00" y="308" text-anchor="middle" class="axis-label">0.85</text>
+<polyline points="56.00,148.19 106.67,144.49 157.33,138.78 208.00,137.23 258.67,126.15 309.33,124.10 360.00,117.44 410.67,111.11 461.33,109.26 512.00,99.15 562.67,93.77 613.33,81.39 664.00,68.15 714.67,63.15 765.33,47.25 816.00,41.93" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="148.19" r="4" fill="#0f766e"></circle>
+<circle cx="56.00" cy="148.19" r="8" class="peak-ring peak-min"></circle>
+<text x="56.00" y="166.19" text-anchor="middle" class="point-label point-min" fill="#0f766e">min 0.8586 @ 0.7</text>
+<circle cx="106.67" cy="144.49" r="4" fill="#0f766e"></circle>
+<circle cx="157.33" cy="138.78" r="4" fill="#0f766e"></circle>
+<circle cx="208.00" cy="137.23" r="4" fill="#0f766e"></circle>
+<circle cx="258.67" cy="126.15" r="4" fill="#0f766e"></circle>
+<circle cx="309.33" cy="124.10" r="4" fill="#0f766e"></circle>
+<circle cx="360.00" cy="117.44" r="4" fill="#0f766e"></circle>
+<circle cx="410.67" cy="111.11" r="4" fill="#0f766e"></circle>
+<circle cx="461.33" cy="109.26" r="4" fill="#0f766e"></circle>
+<circle cx="512.00" cy="99.15" r="4" fill="#0f766e"></circle>
+<circle cx="562.67" cy="93.77" r="4" fill="#0f766e"></circle>
+<circle cx="613.33" cy="81.39" r="4" fill="#0f766e"></circle>
+<circle cx="664.00" cy="68.15" r="4" fill="#0f766e"></circle>
+<circle cx="714.67" cy="63.15" r="4" fill="#0f766e"></circle>
+<circle cx="765.33" cy="47.25" r="4" fill="#0f766e"></circle>
+<circle cx="816.00" cy="41.93" r="4" fill="#0f766e"></circle>
+<circle cx="816.00" cy="41.93" r="8" class="peak-ring peak-max"></circle>
+<text x="816.00" y="27.93" text-anchor="middle" class="point-label point-max" fill="#0f766e">max 0.8986 @ 0.85</text>
+<polyline points="56.00,116.83 106.67,122.05 157.33,132.48 208.00,140.83 258.67,146.05 309.33,151.27 360.00,156.49 410.67,164.84 461.33,172.14 512.00,181.54 562.67,199.28 613.33,208.67 664.00,221.19 714.67,237.89 765.33,249.37 816.00,266.07" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="116.83" r="4" fill="#2563eb"></circle>
+<circle cx="56.00" cy="116.83" r="8" class="peak-ring peak-max"></circle>
+<text x="56.00" y="102.83" text-anchor="middle" class="point-label point-max" fill="#2563eb">max 0.8704 @ 0.7</text>
+<circle cx="106.67" cy="122.05" r="4" fill="#2563eb"></circle>
+<circle cx="157.33" cy="132.48" r="4" fill="#2563eb"></circle>
+<circle cx="208.00" cy="140.83" r="4" fill="#2563eb"></circle>
+<circle cx="258.67" cy="146.05" r="4" fill="#2563eb"></circle>
+<circle cx="309.33" cy="151.27" r="4" fill="#2563eb"></circle>
+<circle cx="360.00" cy="156.49" r="4" fill="#2563eb"></circle>
+<circle cx="410.67" cy="164.84" r="4" fill="#2563eb"></circle>
+<circle cx="461.33" cy="172.14" r="4" fill="#2563eb"></circle>
+<circle cx="512.00" cy="181.54" r="4" fill="#2563eb"></circle>
+<circle cx="562.67" cy="199.28" r="4" fill="#2563eb"></circle>
+<circle cx="613.33" cy="208.67" r="4" fill="#2563eb"></circle>
+<circle cx="664.00" cy="221.19" r="4" fill="#2563eb"></circle>
+<circle cx="714.67" cy="237.89" r="4" fill="#2563eb"></circle>
+<circle cx="765.33" cy="249.37" r="4" fill="#2563eb"></circle>
+<circle cx="816.00" cy="266.07" r="4" fill="#2563eb"></circle>
+<circle cx="816.00" cy="266.07" r="8" class="peak-ring peak-min"></circle>
+<text x="816.00" y="284.07" text-anchor="middle" class="point-label point-min" fill="#2563eb">min 0.8143 @ 0.85</text>
+<polyline points="56.00,132.62 106.67,133.32 157.33,135.64 208.00,139.03 258.67,136.14 309.33,137.77 360.00,137.13 410.67,138.29 461.33,141.13 512.00,141.09 562.67,147.74 613.33,146.80 664.00,147.23 714.67,153.87 765.33,152.79 816.00,159.52" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="132.62" r="4" fill="#dc2626"></circle>
+<circle cx="56.00" cy="132.62" r="8" class="peak-ring peak-max"></circle>
+<text x="56.00" y="118.62" text-anchor="middle" class="point-label point-max" fill="#dc2626">max 0.8645 @ 0.7</text>
+<circle cx="106.67" cy="133.32" r="4" fill="#dc2626"></circle>
+<circle cx="157.33" cy="135.64" r="4" fill="#dc2626"></circle>
+<circle cx="208.00" cy="139.03" r="4" fill="#dc2626"></circle>
+<circle cx="258.67" cy="136.14" r="4" fill="#dc2626"></circle>
+<circle cx="309.33" cy="137.77" r="4" fill="#dc2626"></circle>
+<circle cx="360.00" cy="137.13" r="4" fill="#dc2626"></circle>
+<circle cx="410.67" cy="138.29" r="4" fill="#dc2626"></circle>
+<circle cx="461.33" cy="141.13" r="4" fill="#dc2626"></circle>
+<circle cx="512.00" cy="141.09" r="4" fill="#dc2626"></circle>
+<circle cx="562.67" cy="147.74" r="4" fill="#dc2626"></circle>
+<circle cx="613.33" cy="146.80" r="4" fill="#dc2626"></circle>
+<circle cx="664.00" cy="147.23" r="4" fill="#dc2626"></circle>
+<circle cx="714.67" cy="153.87" r="4" fill="#dc2626"></circle>
+<circle cx="765.33" cy="152.79" r="4" fill="#dc2626"></circle>
+<circle cx="816.00" cy="159.52" r="4" fill="#dc2626"></circle>
+<circle cx="816.00" cy="159.52" r="8" class="peak-ring peak-min"></circle>
+<text x="816.00" y="177.52" text-anchor="middle" class="point-label point-min" fill="#dc2626">min 0.8544 @ 0.85</text>
+  </svg>
+</section>
+<section class="chart-card">
+  <div class="chart-header"><div><h2>数量折线图</h2><p>观察预测框数量以及 TP / FP / FN 随 conf 的变化</p></div><div class="legend"><div class="legend-item"><span class="legend-swatch" style="background:#7c3aed;"></span>Pred</div><div class="legend-item"><span class="legend-swatch" style="background:#15803d;"></span>TP</div><div class="legend-item"><span class="legend-swatch" style="background:#ea580c;"></span>FP</div><div class="legend-item"><span class="legend-swatch" style="background:#b91c1c;"></span>FN</div></div></div>
+  <svg id="count-chart" viewBox="0 0 832 328" role="img" aria-label="数量折线图">
+<line x1="56" y1="24.00" x2="816" y2="24.00" class="grid-line"></line>
+<text x="46" y="28.00" text-anchor="end" class="axis-label">2770</text>
+<line x1="56" y1="76.00" x2="816" y2="76.00" class="grid-line"></line>
+<text x="46" y="80.00" text-anchor="end" class="axis-label">2225</text>
+<line x1="56" y1="128.00" x2="816" y2="128.00" class="grid-line"></line>
+<text x="46" y="132.00" text-anchor="end" class="axis-label">1680</text>
+<line x1="56" y1="180.00" x2="816" y2="180.00" class="grid-line"></line>
+<text x="46" y="184.00" text-anchor="end" class="axis-label">1136</text>
+<line x1="56" y1="232.00" x2="816" y2="232.00" class="grid-line"></line>
+<text x="46" y="236.00" text-anchor="end" class="axis-label">591</text>
+<line x1="56" y1="284.00" x2="816" y2="284.00" class="grid-line"></line>
+<text x="46" y="288.00" text-anchor="end" class="axis-label">46</text>
+    <line x1="56" y1="24" x2="56" y2="284" class="axis-line"></line>
+    <line x1="56" y1="284" x2="816" y2="284" class="axis-line"></line>
+<line x1="56.00" y1="284" x2="56.00" y2="290" class="tick-line"></line>
+<text x="56.00" y="308" text-anchor="middle" class="axis-label">0.7</text>
+<line x1="106.67" y1="284" x2="106.67" y2="290" class="tick-line"></line>
+<text x="106.67" y="308" text-anchor="middle" class="axis-label">0.71</text>
+<line x1="157.33" y1="284" x2="157.33" y2="290" class="tick-line"></line>
+<text x="157.33" y="308" text-anchor="middle" class="axis-label">0.72</text>
+<line x1="208.00" y1="284" x2="208.00" y2="290" class="tick-line"></line>
+<text x="208.00" y="308" text-anchor="middle" class="axis-label">0.73</text>
+<line x1="258.67" y1="284" x2="258.67" y2="290" class="tick-line"></line>
+<text x="258.67" y="308" text-anchor="middle" class="axis-label">0.74</text>
+<line x1="309.33" y1="284" x2="309.33" y2="290" class="tick-line"></line>
+<text x="309.33" y="308" text-anchor="middle" class="axis-label">0.75</text>
+<line x1="360.00" y1="284" x2="360.00" y2="290" class="tick-line"></line>
+<text x="360.00" y="308" text-anchor="middle" class="axis-label">0.76</text>
+<line x1="410.67" y1="284" x2="410.67" y2="290" class="tick-line"></line>
+<text x="410.67" y="308" text-anchor="middle" class="axis-label">0.77</text>
+<line x1="461.33" y1="284" x2="461.33" y2="290" class="tick-line"></line>
+<text x="461.33" y="308" text-anchor="middle" class="axis-label">0.78</text>
+<line x1="512.00" y1="284" x2="512.00" y2="290" class="tick-line"></line>
+<text x="512.00" y="308" text-anchor="middle" class="axis-label">0.79</text>
+<line x1="562.67" y1="284" x2="562.67" y2="290" class="tick-line"></line>
+<text x="562.67" y="308" text-anchor="middle" class="axis-label">0.8</text>
+<line x1="613.33" y1="284" x2="613.33" y2="290" class="tick-line"></line>
+<text x="613.33" y="308" text-anchor="middle" class="axis-label">0.81</text>
+<line x1="664.00" y1="284" x2="664.00" y2="290" class="tick-line"></line>
+<text x="664.00" y="308" text-anchor="middle" class="axis-label">0.82</text>
+<line x1="714.67" y1="284" x2="714.67" y2="290" class="tick-line"></line>
+<text x="714.67" y="308" text-anchor="middle" class="axis-label">0.83</text>
+<line x1="765.33" y1="284" x2="765.33" y2="290" class="tick-line"></line>
+<text x="765.33" y="308" text-anchor="middle" class="axis-label">0.84</text>
+<line x1="816.00" y1="284" x2="816.00" y2="290" class="tick-line"></line>
+<text x="816.00" y="308" text-anchor="middle" class="axis-label">0.85</text>
+<polyline points="56.00,41.93 106.67,42.89 157.33,44.60 208.00,45.65 258.67,47.37 309.33,48.14 360.00,49.38 410.67,50.90 461.33,51.86 512.00,53.86 562.67,56.25 613.33,58.45 664.00,61.02 714.67,63.22 765.33,65.89 816.00,68.09" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="41.93" r="4" fill="#7c3aed"></circle>
+<circle cx="56.00" cy="41.93" r="8" class="peak-ring peak-max"></circle>
+<text x="56.00" y="27.93" text-anchor="middle" class="point-label point-max" fill="#7c3aed">max 2582 @ 0.7</text>
+<circle cx="106.67" cy="42.89" r="4" fill="#7c3aed"></circle>
+<circle cx="157.33" cy="44.60" r="4" fill="#7c3aed"></circle>
+<circle cx="208.00" cy="45.65" r="4" fill="#7c3aed"></circle>
+<circle cx="258.67" cy="47.37" r="4" fill="#7c3aed"></circle>
+<circle cx="309.33" cy="48.14" r="4" fill="#7c3aed"></circle>
+<circle cx="360.00" cy="49.38" r="4" fill="#7c3aed"></circle>
+<circle cx="410.67" cy="50.90" r="4" fill="#7c3aed"></circle>
+<circle cx="461.33" cy="51.86" r="4" fill="#7c3aed"></circle>
+<circle cx="512.00" cy="53.86" r="4" fill="#7c3aed"></circle>
+<circle cx="562.67" cy="56.25" r="4" fill="#7c3aed"></circle>
+<circle cx="613.33" cy="58.45" r="4" fill="#7c3aed"></circle>
+<circle cx="664.00" cy="61.02" r="4" fill="#7c3aed"></circle>
+<circle cx="714.67" cy="63.22" r="4" fill="#7c3aed"></circle>
+<circle cx="765.33" cy="65.89" r="4" fill="#7c3aed"></circle>
+<circle cx="816.00" cy="68.09" r="4" fill="#7c3aed"></circle>
+<circle cx="816.00" cy="68.09" r="8" class="peak-ring peak-min"></circle>
+<text x="816.00" y="86.09" text-anchor="middle" class="point-label point-min" fill="#7c3aed">min 2308 @ 0.85</text>
+<polyline points="56.00,76.77 106.67,77.25 157.33,78.21 208.00,78.97 258.67,79.45 309.33,79.92 360.00,80.40 410.67,81.16 461.33,81.83 512.00,82.69 562.67,84.31 613.33,85.17 664.00,86.32 714.67,87.85 765.33,88.90 816.00,90.42" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="76.77" r="4" fill="#15803d"></circle>
+<circle cx="56.00" cy="76.77" r="8" class="peak-ring peak-max"></circle>
+<text x="56.00" y="62.77" text-anchor="middle" class="point-label point-max" fill="#15803d">max 2217 @ 0.7</text>
+<circle cx="106.67" cy="77.25" r="4" fill="#15803d"></circle>
+<circle cx="157.33" cy="78.21" r="4" fill="#15803d"></circle>
+<circle cx="208.00" cy="78.97" r="4" fill="#15803d"></circle>
+<circle cx="258.67" cy="79.45" r="4" fill="#15803d"></circle>
+<circle cx="309.33" cy="79.92" r="4" fill="#15803d"></circle>
+<circle cx="360.00" cy="80.40" r="4" fill="#15803d"></circle>
+<circle cx="410.67" cy="81.16" r="4" fill="#15803d"></circle>
+<circle cx="461.33" cy="81.83" r="4" fill="#15803d"></circle>
+<circle cx="512.00" cy="82.69" r="4" fill="#15803d"></circle>
+<circle cx="562.67" cy="84.31" r="4" fill="#15803d"></circle>
+<circle cx="613.33" cy="85.17" r="4" fill="#15803d"></circle>
+<circle cx="664.00" cy="86.32" r="4" fill="#15803d"></circle>
+<circle cx="714.67" cy="87.85" r="4" fill="#15803d"></circle>
+<circle cx="765.33" cy="88.90" r="4" fill="#15803d"></circle>
+<circle cx="816.00" cy="90.42" r="4" fill="#15803d"></circle>
+<circle cx="816.00" cy="90.42" r="8" class="peak-ring peak-min"></circle>
+<text x="816.00" y="108.42" text-anchor="middle" class="point-label point-min" fill="#15803d">min 2074 @ 0.85</text>
+<polyline points="56.00,253.56 106.67,254.04 157.33,254.80 208.00,255.09 258.67,256.33 309.33,256.62 360.00,257.38 410.67,258.15 461.33,258.43 512.00,259.58 562.67,260.34 613.33,261.68 664.00,263.11 714.67,263.78 765.33,265.40 816.00,266.07" fill="none" stroke="#ea580c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="253.56" r="4" fill="#ea580c"></circle>
+<circle cx="56.00" cy="253.56" r="8" class="peak-ring peak-max"></circle>
+<text x="56.00" y="239.56" text-anchor="middle" class="point-label point-max" fill="#ea580c">max 365 @ 0.7</text>
+<circle cx="106.67" cy="254.04" r="4" fill="#ea580c"></circle>
+<circle cx="157.33" cy="254.80" r="4" fill="#ea580c"></circle>
+<circle cx="208.00" cy="255.09" r="4" fill="#ea580c"></circle>
+<circle cx="258.67" cy="256.33" r="4" fill="#ea580c"></circle>
+<circle cx="309.33" cy="256.62" r="4" fill="#ea580c"></circle>
+<circle cx="360.00" cy="257.38" r="4" fill="#ea580c"></circle>
+<circle cx="410.67" cy="258.15" r="4" fill="#ea580c"></circle>
+<circle cx="461.33" cy="258.43" r="4" fill="#ea580c"></circle>
+<circle cx="512.00" cy="259.58" r="4" fill="#ea580c"></circle>
+<circle cx="562.67" cy="260.34" r="4" fill="#ea580c"></circle>
+<circle cx="613.33" cy="261.68" r="4" fill="#ea580c"></circle>
+<circle cx="664.00" cy="263.11" r="4" fill="#ea580c"></circle>
+<circle cx="714.67" cy="263.78" r="4" fill="#ea580c"></circle>
+<circle cx="765.33" cy="265.40" r="4" fill="#ea580c"></circle>
+<circle cx="816.00" cy="266.07" r="4" fill="#ea580c"></circle>
+<circle cx="816.00" cy="266.07" r="8" class="peak-ring peak-min"></circle>
+<text x="816.00" y="284.07" text-anchor="middle" class="point-label point-min" fill="#ea580c">min 234 @ 0.85</text>
+<polyline points="56.00,256.90 106.67,256.43 157.33,255.47 208.00,254.71 258.67,254.23 309.33,253.75 360.00,253.28 410.67,252.51 461.33,251.85 512.00,250.99 562.67,249.36 613.33,248.50 664.00,247.36 714.67,245.83 765.33,244.78 816.00,243.25" fill="none" stroke="#b91c1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+<circle cx="56.00" cy="256.90" r="4" fill="#b91c1c"></circle>
+<circle cx="56.00" cy="256.90" r="8" class="peak-ring peak-min"></circle>
+<text x="56.00" y="274.90" text-anchor="middle" class="point-label point-min" fill="#b91c1c">min 330 @ 0.7</text>
+<circle cx="106.67" cy="256.43" r="4" fill="#b91c1c"></circle>
+<circle cx="157.33" cy="255.47" r="4" fill="#b91c1c"></circle>
+<circle cx="208.00" cy="254.71" r="4" fill="#b91c1c"></circle>
+<circle cx="258.67" cy="254.23" r="4" fill="#b91c1c"></circle>
+<circle cx="309.33" cy="253.75" r="4" fill="#b91c1c"></circle>
+<circle cx="360.00" cy="253.28" r="4" fill="#b91c1c"></circle>
+<circle cx="410.67" cy="252.51" r="4" fill="#b91c1c"></circle>
+<circle cx="461.33" cy="251.85" r="4" fill="#b91c1c"></circle>
+<circle cx="512.00" cy="250.99" r="4" fill="#b91c1c"></circle>
+<circle cx="562.67" cy="249.36" r="4" fill="#b91c1c"></circle>
+<circle cx="613.33" cy="248.50" r="4" fill="#b91c1c"></circle>
+<circle cx="664.00" cy="247.36" r="4" fill="#b91c1c"></circle>
+<circle cx="714.67" cy="245.83" r="4" fill="#b91c1c"></circle>
+<circle cx="765.33" cy="244.78" r="4" fill="#b91c1c"></circle>
+<circle cx="816.00" cy="243.25" r="4" fill="#b91c1c"></circle>
+<circle cx="816.00" cy="243.25" r="8" class="peak-ring peak-max"></circle>
+<text x="816.00" y="229.25" text-anchor="middle" class="point-label point-max" fill="#b91c1c">max 473 @ 0.85</text>
+  </svg>
+</section>
+  </section>
+  <table>
+    <thead>
+      <tr>
+        <th>conf</th>
+        <th>Pred</th>
+        <th>Pred/Image</th>
+        <th>TP</th>
+        <th>FP</th>
+        <th>FN</th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>F1</th>
+        <th>dPred</th>
+        <th>dPrec</th>
+        <th>dRecall</th>
+        <th>dF1</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr>
+  <td>0.7</td>
+  <td>2582</td>
+  <td>2.9644</td>
+  <td>2217</td>
+  <td>365</td>
+  <td>330</td>
+  <td>0.8586</td>
+  <td>0.8704</td>
+  <td>0.8645</td>
+  <td>+0</td>
+  <td>+0.0000</td>
+  <td>+0.0000</td>
+  <td>+0.0000</td>
+</tr>
+<tr>
+  <td>0.71</td>
+  <td>2572</td>
+  <td>2.9529</td>
+  <td>2212</td>
+  <td>360</td>
+  <td>335</td>
+  <td>0.8600</td>
+  <td>0.8685</td>
+  <td>0.8642</td>
+  <td>-10</td>
+  <td>+0.0014</td>
+  <td>-0.0020</td>
+  <td>-0.0003</td>
+</tr>
+<tr>
+  <td>0.72</td>
+  <td>2554</td>
+  <td>2.9323</td>
+  <td>2202</td>
+  <td>352</td>
+  <td>345</td>
+  <td>0.8622</td>
+  <td>0.8645</td>
+  <td>0.8634</td>
+  <td>-18</td>
+  <td>+0.0021</td>
+  <td>-0.0039</td>
+  <td>-0.0009</td>
+</tr>
+<tr>
+  <td>0.73</td>
+  <td>2543</td>
+  <td>2.9196</td>
+  <td>2194</td>
+  <td>349</td>
+  <td>353</td>
+  <td>0.8628</td>
+  <td>0.8614</td>
+  <td>0.8621</td>
+  <td>-11</td>
+  <td>+0.0006</td>
+  <td>-0.0031</td>
+  <td>-0.0013</td>
+</tr>
+<tr>
+  <td>0.74</td>
+  <td>2525</td>
+  <td>2.8990</td>
+  <td>2189</td>
+  <td>336</td>
+  <td>358</td>
+  <td>0.8669</td>
+  <td>0.8594</td>
+  <td>0.8632</td>
+  <td>-18</td>
+  <td>+0.0042</td>
+  <td>-0.0020</td>
+  <td>+0.0011</td>
+</tr>
+<tr>
+  <td>0.75</td>
+  <td>2517</td>
+  <td>2.8898</td>
+  <td>2184</td>
+  <td>333</td>
+  <td>363</td>
+  <td>0.8677</td>
+  <td>0.8575</td>
+  <td>0.8626</td>
+  <td>-8</td>
+  <td>+0.0008</td>
+  <td>-0.0020</td>
+  <td>-0.0006</td>
+</tr>
+<tr>
+  <td>0.76</td>
+  <td>2504</td>
+  <td>2.8749</td>
+  <td>2179</td>
+  <td>325</td>
+  <td>368</td>
+  <td>0.8702</td>
+  <td>0.8555</td>
+  <td>0.8628</td>
+  <td>-13</td>
+  <td>+0.0025</td>
+  <td>-0.0020</td>
+  <td>+0.0002</td>
+</tr>
+<tr>
+  <td>0.77</td>
+  <td>2488</td>
+  <td>2.8565</td>
+  <td>2171</td>
+  <td>317</td>
+  <td>376</td>
+  <td>0.8726</td>
+  <td>0.8524</td>
+  <td>0.8624</td>
+  <td>-16</td>
+  <td>+0.0024</td>
+  <td>-0.0031</td>
+  <td>-0.0004</td>
+</tr>
+<tr>
+  <td>0.78</td>
+  <td>2478</td>
+  <td>2.8450</td>
+  <td>2164</td>
+  <td>314</td>
+  <td>383</td>
+  <td>0.8733</td>
+  <td>0.8496</td>
+  <td>0.8613</td>
+  <td>-10</td>
+  <td>+0.0007</td>
+  <td>-0.0027</td>
+  <td>-0.0011</td>
+</tr>
+<tr>
+  <td>0.79</td>
+  <td>2457</td>
+  <td>2.8209</td>
+  <td>2155</td>
+  <td>302</td>
+  <td>392</td>
+  <td>0.8771</td>
+  <td>0.8461</td>
+  <td>0.8613</td>
+  <td>-21</td>
+  <td>+0.0038</td>
+  <td>-0.0035</td>
+  <td>+0.0000</td>
+</tr>
+<tr>
+  <td>0.8</td>
+  <td>2432</td>
+  <td>2.7922</td>
+  <td>2138</td>
+  <td>294</td>
+  <td>409</td>
+  <td>0.8791</td>
+  <td>0.8394</td>
+  <td>0.8588</td>
+  <td>-25</td>
+  <td>+0.0020</td>
+  <td>-0.0067</td>
+  <td>-0.0025</td>
+</tr>
+<tr>
+  <td>0.81</td>
+  <td>2409</td>
+  <td>2.7658</td>
+  <td>2129</td>
+  <td>280</td>
+  <td>418</td>
+  <td>0.8838</td>
+  <td>0.8359</td>
+  <td>0.8592</td>
+  <td>-23</td>
+  <td>+0.0047</td>
+  <td>-0.0035</td>
+  <td>+0.0004</td>
+</tr>
+<tr>
+  <td>0.82</td>
+  <td>2382</td>
+  <td>2.7348</td>
+  <td>2117</td>
+  <td>265</td>
+  <td>430</td>
+  <td>0.8887</td>
+  <td>0.8312</td>
+  <td>0.8590</td>
+  <td>-27</td>
+  <td>+0.0050</td>
+  <td>-0.0047</td>
+  <td>-0.0002</td>
+</tr>
+<tr>
+  <td>0.83</td>
+  <td>2359</td>
+  <td>2.7084</td>
+  <td>2101</td>
+  <td>258</td>
+  <td>446</td>
+  <td>0.8906</td>
+  <td>0.8249</td>
+  <td>0.8565</td>
+  <td>-23</td>
+  <td>+0.0019</td>
+  <td>-0.0063</td>
+  <td>-0.0025</td>
+</tr>
+<tr>
+  <td>0.84</td>
+  <td>2331</td>
+  <td>2.6762</td>
+  <td>2090</td>
+  <td>241</td>
+  <td>457</td>
+  <td>0.8966</td>
+  <td>0.8206</td>
+  <td>0.8569</td>
+  <td>-28</td>
+  <td>+0.0060</td>
+  <td>-0.0043</td>
+  <td>+0.0004</td>
+</tr>
+<tr>
+  <td>0.85</td>
+  <td>2308</td>
+  <td>2.6498</td>
+  <td>2074</td>
+  <td>234</td>
+  <td>473</td>
+  <td>0.8986</td>
+  <td>0.8143</td>
+  <td>0.8544</td>
+  <td>-23</td>
+  <td>+0.0020</td>
+  <td>-0.0063</td>
+  <td>-0.0025</td>
+</tr>
+    </tbody>
+  </table>
+</body>
+</html>

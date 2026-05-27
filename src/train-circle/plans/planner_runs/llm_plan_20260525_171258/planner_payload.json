@@ -1,0 +1,194 @@
+{
+  "task_context": {
+    "project": "youge",
+    "model_family": "YOLO11n",
+    "dataset_name": "youge",
+    "problem_summary": [
+      "相邻帧截断框误分类",
+      "边缘目标稳定性不足",
+      "小目标更敏感"
+    ],
+    "primary_objective": "优先改善截断目标和边缘目标的检测稳定性，同时关注总体 mAP50-95",
+    "notes": [
+      "相机固定",
+      "场景几何变化较小",
+      "增强不宜过强"
+    ]
+  },
+  "baseline_run": {
+    "label": "epochs_60",
+    "version": "version007",
+    "run_name": "youge_yolo11n_version007",
+    "metrics": {
+      "precision": 0.96237,
+      "recall": 0.94401,
+      "map50": 0.98789,
+      "map50_95": 0.9605
+    },
+    "epochs_completed": 60,
+    "best_epoch": 56,
+    "elapsed_seconds": 1601.27,
+    "train_config": {
+      "epochs": 60,
+      "imgsz": 640,
+      "batch": 4,
+      "workers": 4,
+      "patience": 50,
+      "mosaic": 0.5,
+      "amp": false,
+      "extra_train_args": {}
+    }
+  },
+  "search_space": {
+    "allowed_params": [
+      "imgsz",
+      "epochs",
+      "mosaic",
+      "translate",
+      "scale",
+      "erasing",
+      "amp"
+    ],
+    "param_space": {
+      "imgsz": {
+        "type": "categorical",
+        "values": [
+          640,
+          768,
+          896
+        ]
+      },
+      "epochs": {
+        "type": "int",
+        "min": 60,
+        "max": 140,
+        "step": 20
+      },
+      "mosaic": {
+        "type": "float",
+        "min": 0.0,
+        "max": 0.2
+      },
+      "translate": {
+        "type": "float",
+        "min": 0.02,
+        "max": 0.08
+      },
+      "scale": {
+        "type": "float",
+        "min": 0.15,
+        "max": 0.35
+      },
+      "erasing": {
+        "type": "float",
+        "min": 0.0,
+        "max": 0.2
+      },
+      "amp": {
+        "type": "categorical",
+        "values": [
+          true
+        ]
+      }
+    },
+    "frozen_defaults": {
+      "_comment": "这些项建议先固定，不要一开始就放进搜索空间里。",
+      "mixup": 0.0,
+      "copy_paste": 0.0,
+      "degrees": 0.0,
+      "shear": 0.0,
+      "perspective": 0.0,
+      "flipud": 0.0
+    }
+  },
+  "history_summary": [
+    {
+      "label": "imgsz_896",
+      "version": "version006",
+      "run_name": "youge_yolo11n_version006",
+      "metrics": {
+        "precision": 0.95182,
+        "recall": 0.94385,
+        "map50": 0.9804,
+        "map50_95": 0.94939
+      },
+      "epochs_completed": 30,
+      "best_epoch": 29,
+      "elapsed_seconds": 931.043,
+      "train_config": {
+        "epochs": 30,
+        "imgsz": 896,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    },
+    {
+      "label": "imgsz_768",
+      "version": "version005",
+      "run_name": "youge_yolo11n_version005",
+      "metrics": {
+        "precision": 0.96157,
+        "recall": 0.92715,
+        "map50": 0.98047,
+        "map50_95": 0.94739
+      },
+      "epochs_completed": 30,
+      "best_epoch": 27,
+      "elapsed_seconds": 738.06,
+      "train_config": {
+        "epochs": 30,
+        "imgsz": 768,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    },
+    {
+      "label": "baseline_refresh",
+      "version": "version004",
+      "run_name": "youge_yolo11n_version004",
+      "metrics": {
+        "precision": 0.93783,
+        "recall": 0.92075,
+        "map50": 0.98244,
+        "map50_95": 0.94905
+      },
+      "epochs_completed": 30,
+      "best_epoch": 29,
+      "elapsed_seconds": 685.287,
+      "train_config": {
+        "epochs": 30,
+        "imgsz": 640,
+        "batch": 4,
+        "workers": 4,
+        "patience": 50,
+        "mosaic": 0.5,
+        "amp": false,
+        "extra_train_args": {}
+      }
+    }
+  ],
+  "budget_constraints": {
+    "max_recommended_runs": 5,
+    "max_epochs_per_run": 120,
+    "max_imgsz": 896,
+    "max_batch": 8,
+    "allow_new_params": false,
+    "require_non_duplicate_runs": true
+  },
+  "planner_rules": {
+    "must_stay_within_search_space": true,
+    "must_not_repeat_history": true,
+    "prefer_conservative_narrowing": true,
+    "focus_on_business_problem_over_raw_map": true,
+    "max_observations": 5,
+    "max_recommended_runs": 5
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/train-circle/llm_planner_response_schema.json",
+  "title": "LLM Planner Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observations",
+    "frozen_params",
+    "range_updates",
+    "recommended_runs"
+  ],
+  "properties": {
+    "observations": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "frozen_params": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "integer",
+          "string",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "range_updates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 10,
+        "items": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "boolean"
+          ]
+        }
+      }
+    },
+    "recommended_runs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "reason",
+          "overrides"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "overrides": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": [
+                "number",
+                "integer",
+                "string",
+                "boolean"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

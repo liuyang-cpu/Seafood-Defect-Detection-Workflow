@@ -1,0 +1,77 @@
+{
+  "config": {
+    "species": "youge",
+    "split": "both",
+    "predict_name": "youge_predict_version003",
+    "project": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\opt-class\\runs\\opt-class",
+    "name": "youge_opt_class_report_version003",
+    "conf_threshold": 0.25,
+    "iou_threshold": 0.5,
+    "max_items": null
+  },
+  "summary": {
+    "images": 871,
+    "gt_boxes": 2521,
+    "pred_boxes": 3093,
+    "tp": 2431,
+    "fp": 662,
+    "fn": 90,
+    "precision": 0.7859683155512448,
+    "recall": 0.9642998809996033,
+    "f1": 0.8660491628072675,
+    "avg_pred_boxes_per_image": 3.5510907003444316,
+    "per_class": {
+      "broken": {
+        "gt_boxes": 787,
+        "pred_boxes": 1078,
+        "tp": 768,
+        "fp": 310,
+        "fn": 19,
+        "precision": 0.712430426716141,
+        "recall": 0.9758576874205845,
+        "f1": 0.8235924932975871
+      },
+      "normal": {
+        "gt_boxes": 846,
+        "pred_boxes": 1044,
+        "tp": 843,
+        "fp": 201,
+        "fn": 3,
+        "precision": 0.8074712643678161,
+        "recall": 0.9964539007092199,
+        "f1": 0.8920634920634921
+      },
+      "muddy": {
+        "gt_boxes": 521,
+        "pred_boxes": 563,
+        "tp": 470,
+        "fp": 93,
+        "fn": 51,
+        "precision": 0.8348134991119005,
+        "recall": 0.9021113243761996,
+        "f1": 0.8671586715867158
+      },
+      "empty": {
+        "gt_boxes": 367,
+        "pred_boxes": 408,
+        "tp": 350,
+        "fp": 58,
+        "fn": 17,
+        "precision": 0.8578431372549019,
+        "recall": 0.9536784741144414,
+        "f1": 0.9032258064516128
+      }
+    },
+    "business": {
+      "defect_gt_boxes": 1675,
+      "defect_pred_boxes": 2049,
+      "defect_detected_boxes": 1644,
+      "defect_missed_boxes": 31,
+      "defect_detect_rate": 0.9814925373134329,
+      "defect_miss_rate": 0.018507462686567163,
+      "normal_gt_boxes": 846,
+      "normal_hit_by_defect_boxes": 16,
+      "normal_to_defect_rate": 0.018912529550827423
+    }
+  }
+}

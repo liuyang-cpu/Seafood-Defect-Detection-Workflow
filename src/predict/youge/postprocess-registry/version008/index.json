@@ -1,0 +1,9 @@
+{
+  "recipes": {
+    "sha256:2f3dbe880625bb9abf3aecae699b6a073f0d8d5473560e049ca16707378ec1e2": "pp001",
+    "sha256:c6b05801e2994e9332aa1d8ba9205cc500e776cebb19c8505eb88a66ffeab4e8": "pp002",
+    "sha256:555229d85b43b1b67f5bd47d7e50eff0001c363e9b2fee3e304e8842169ed4fa": "pp003"
+  },
+  "model_version": "version008",
+  "updated_at": "2026-05-25T15:39:51.115096+00:00"
+}

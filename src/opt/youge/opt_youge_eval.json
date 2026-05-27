@@ -1,0 +1,16 @@
+{
+  "species": "youge",
+  "split": "both",
+  "predict_name": "youge_predict",
+  "image_dir": null,
+  "predict_image_dir": null,
+  "gt_labels_dir": null,
+  "pred_labels_dir": null,
+  "project": "runs/opt",
+  "name": "youge_opt_report",
+  "version": null,
+  "conf_threshold": 0.75,
+  "iou_threshold": 0.5,
+  "max_items": null,
+  "exist_ok": true
+}
