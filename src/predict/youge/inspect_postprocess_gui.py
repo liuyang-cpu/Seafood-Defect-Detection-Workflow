@@ -9,13 +9,13 @@ from tkinter import filedialog, messagebox, ttk
 try:
     import cv2
     import numpy as np
-except Exception:  # noqa: BLE001
+except Exception:
     cv2 = None
     np = None
 
 try:
     from PIL import Image, ImageTk
-except Exception:  # noqa: BLE001
+except Exception:
     Image = None
     ImageTk = None
 
@@ -25,8 +25,15 @@ IMAGE_EXTENSIONS = {".bmp", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Inspect predict postprocess parameters in a local GUI.")
-    parser.add_argument("--predict-dir", type=str, default=None, help="Predict output directory containing phase2_postprocess_summary.json.")
-    parser.add_argument("--image-name", type=str, default=None, help="Optional image name to preselect after loading the predict dir.")
+    parser.add_argument(
+        "--predict-dir",
+        type=str,
+        default=None,
+        help="Predict output directory containing phase2_postprocess_summary.json.",
+    )
+    parser.add_argument(
+        "--image-name", type=str, default=None, help="Optional image name to preselect after loading the predict dir."
+    )
     return parser.parse_args()
 
 
@@ -203,7 +210,9 @@ class PostprocessInspectorApp:
         ttk.Button(toolbar, text="选择 Predict 目录", command=self.choose_predict_dir).grid(row=0, column=0, sticky="w")
         self.dir_var = tk.StringVar(value="未选择目录")
         ttk.Label(toolbar, textvariable=self.dir_var).grid(row=0, column=1, padx=(12, 0), sticky="ew")
-        ttk.Button(toolbar, text="适应窗口", command=lambda: self.set_zoom_mode("fit")).grid(row=0, column=2, padx=(12, 0))
+        ttk.Button(toolbar, text="适应窗口", command=lambda: self.set_zoom_mode("fit")).grid(
+            row=0, column=2, padx=(12, 0)
+        )
         ttk.Button(toolbar, text="1:1", command=lambda: self.set_zoom_mode("actual")).grid(row=0, column=3, padx=(6, 0))
         ttk.Button(toolbar, text="放大", command=self.zoom_in).grid(row=0, column=4, padx=(6, 0))
         ttk.Button(toolbar, text="缩小", command=self.zoom_out).grid(row=0, column=5, padx=(6, 0))
@@ -304,7 +313,7 @@ class PostprocessInspectorApp:
             return
         try:
             self.load_predict_dir(Path(selected))
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             messagebox.showerror("加载失败", str(exc))
 
     def select_image_by_name(self, image_name: str) -> None:
@@ -422,8 +431,8 @@ class PostprocessInspectorApp:
             if self.scale_ratio == 1.0:
                 resized = self.original_pil_image
             else:
-                target_w = max(1, int(round(original_width * self.scale_ratio)))
-                target_h = max(1, int(round(original_height * self.scale_ratio)))
+                target_w = max(1, round(original_width * self.scale_ratio))
+                target_h = max(1, round(original_height * self.scale_ratio))
                 resized = self.original_pil_image.resize((target_w, target_h), Image.Resampling.LANCZOS)
             photo = ImageTk.PhotoImage(resized)
             display_ratio = self.scale_ratio
@@ -537,17 +546,24 @@ class PostprocessInspectorApp:
         vertical_edge_margin_px = float(self.rule_config.get("vertical_edge_margin_px", 0.0) or 0.0)
         vertical_edge_type = row.get("actual_vertical_edge_type")
         if source_for_metrics is not None:
-            vertical_edge_type = vertical_edge_type or detect_vertical_edge_type(y1, y2, source_for_metrics.height, vertical_edge_margin_px)
+            vertical_edge_type = vertical_edge_type or detect_vertical_edge_type(
+                y1, y2, source_for_metrics.height, vertical_edge_margin_px
+            )
         vertical_edge_span_score = row.get("actual_vertical_edge_span_score")
         if vertical_edge_span_score is None:
             vertical_edge_span_score = row.get("phase2_edge_span_score")
         if vertical_edge_span_score is None and vertical_edge_type not in {"top", "bottom", "top_bottom"}:
             vertical_edge_span_score = 0.0
-        if vertical_edge_span_score is None and source_for_metrics is not None and np is not None and vertical_edge_type in {"top", "bottom", "top_bottom"}:
-            ix1 = max(0, min(source_for_metrics.width - 1, int(round(x1))))
-            iy1 = max(0, min(source_for_metrics.height - 1, int(round(y1))))
-            ix2 = max(ix1 + 1, min(source_for_metrics.width, int(round(x2))))
-            iy2 = max(iy1 + 1, min(source_for_metrics.height, int(round(y2))))
+        if (
+            vertical_edge_span_score is None
+            and source_for_metrics is not None
+            and np is not None
+            and vertical_edge_type in {"top", "bottom", "top_bottom"}
+        ):
+            ix1 = max(0, min(source_for_metrics.width - 1, round(x1)))
+            iy1 = max(0, min(source_for_metrics.height - 1, round(y1)))
+            ix2 = max(ix1 + 1, min(source_for_metrics.width, round(x2)))
+            iy2 = max(iy1 + 1, min(source_for_metrics.height, round(y2)))
             crop = np.array(source_for_metrics.crop((ix1, iy1, ix2, iy2)))
             vertical_edge_span_score = compute_edge_span_ratio_from_array(crop, vertical_edge_type)
 

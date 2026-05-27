@@ -51,12 +51,14 @@ def evaluate_horizontal_edge_penalty(
     bottom_gap = image_height - y2
     min_edge_gap = min(top_gap, bottom_gap)
     edge_type = detect_vertical_edge_type(y1, y2, image_height, edge_touch_px)
-    ix1 = max(0, min(image.shape[1] - 1, int(round(x1))))
-    iy1 = max(0, min(image.shape[0] - 1, int(round(y1))))
-    ix2 = max(ix1 + 1, min(image.shape[1], int(round(x2))))
-    iy2 = max(iy1 + 1, min(image.shape[0], int(round(y2))))
+    ix1 = max(0, min(image.shape[1] - 1, round(x1)))
+    iy1 = max(0, min(image.shape[0] - 1, round(y1)))
+    ix2 = max(ix1 + 1, min(image.shape[1], round(x2)))
+    iy2 = max(iy1 + 1, min(image.shape[0], round(y2)))
     crop = image[iy1:iy2, ix1:ix2]
-    edge_span_score = compute_edge_span_ratio_from_crop(crop, edge_type) if edge_type in {"top", "bottom", "top_bottom"} else 0.0
+    edge_span_score = (
+        compute_edge_span_ratio_from_crop(crop, edge_type) if edge_type in {"top", "bottom", "top_bottom"} else 0.0
+    )
     short_penalty_apply = (
         min_edge_gap <= float(edge_touch_px)
         and aspect_ratio >= float(flat_ratio_threshold_short)
@@ -166,7 +168,7 @@ def suppress_same_class_contained_boxes(
         area_high = bbox_area(det_high)
         if area_high <= 0:
             continue
-        for low_idx in ranked_indices[i + 1:]:
+        for low_idx in ranked_indices[i + 1 :]:
             if not keep_mask[low_idx]:
                 continue
             det_low = detections[low_idx]
@@ -207,7 +209,9 @@ def choose_adjacent_frame_keep_drop(
     edge_priority_rule: bool,
     edge_touch_margin_px: float,
     height_confidence_offset_px: float,
-) -> tuple[dict[str, float | int | str | None], dict[str, object], dict[str, float | int | str | None], dict[str, object]]:
+) -> tuple[
+    dict[str, float | int | str | None], dict[str, object], dict[str, float | int | str | None], dict[str, object]
+]:
     if edge_priority_rule:
         current_edge_type = detect_vertical_edge_type(
             float(current_det["y1"]),
@@ -286,7 +290,9 @@ def apply_adjacent_frame_dedup(
                 if is_bottom_touching:
                     expected_next_y2_max = current_y1 - float(delta_y) + float(height_max)
                 else:
-                    expected_next_y2_max = current_y1 - float(delta_y) + current_height_px + float(non_bottom_y2_correction)
+                    expected_next_y2_max = (
+                        current_y1 - float(delta_y) + current_height_px + float(non_bottom_y2_correction)
+                    )
                 if next_y2 < expected_next_y2_min or next_y2 > expected_next_y2_max:
                     continue
                 overlap_ratio = horizontal_overlap_ratio(current_det, next_det)
@@ -300,7 +306,11 @@ def apply_adjacent_frame_dedup(
                     abs(next_y2 - expected_next_y2_min),
                     abs(next_y2 - expected_next_y2_max),
                 )
-                score = (min(left_dx, right_dx) / max(float(x_tolerance), 1.0)) + (y_gap_to_window / max(float(height_max - height_min), 1.0)) + (1.0 - overlap_ratio)
+                score = (
+                    (min(left_dx, right_dx) / max(float(x_tolerance), 1.0))
+                    + (y_gap_to_window / max(float(height_max - height_min), 1.0))
+                    + (1.0 - overlap_ratio)
+                )
                 candidates.append((score, current_index, next_index, overlap_ratio))
 
         candidates.sort(key=lambda item: item[0])
@@ -384,10 +394,10 @@ def classify_vertical_edge_box(
         return result
 
     if precomputed_edge_span_score is None:
-        ix1 = max(0, min(image.shape[1] - 1, int(round(x1))))
-        iy1 = max(0, min(image.shape[0] - 1, int(round(y1))))
-        ix2 = max(ix1 + 1, min(image.shape[1], int(round(x2))))
-        iy2 = max(iy1 + 1, min(image.shape[0], int(round(y2))))
+        ix1 = max(0, min(image.shape[1] - 1, round(x1)))
+        iy1 = max(0, min(image.shape[0] - 1, round(y1)))
+        ix2 = max(ix1 + 1, min(image.shape[1], round(x2)))
+        iy2 = max(iy1 + 1, min(image.shape[0], round(y2)))
         crop = image[iy1:iy2, ix1:ix2]
         edge_span_score = compute_edge_span_ratio_from_crop(crop, edge_type)
     else:
@@ -464,10 +474,10 @@ def build_penalty_preview_lines(det: dict, rule_name: str) -> list[str]:
 
 def render_penalty_preview(image: np.ndarray, det: dict, rule_name: str, output_path: Path) -> None:
     image_h, image_w = image.shape[:2]
-    x1 = max(0, min(image_w - 1, int(round(float(det["x1"])))))
-    y1 = max(0, min(image_h - 1, int(round(float(det["y1"])))))
-    x2 = max(x1 + 1, min(image_w, int(round(float(det["x2"])))))
-    y2 = max(y1 + 1, min(image_h, int(round(float(det["y2"])))))
+    x1 = max(0, min(image_w - 1, round(float(det["x1"]))))
+    y1 = max(0, min(image_h - 1, round(float(det["y1"]))))
+    x2 = max(x1 + 1, min(image_w, round(float(det["x2"]))))
+    y2 = max(y1 + 1, min(image_h, round(float(det["y2"]))))
 
     pad = 16
     crop_x1 = max(0, x1 - pad)
@@ -499,7 +509,7 @@ def render_penalty_preview(image: np.ndarray, det: dict, rule_name: str, output_
     canvas_width = max(crop.shape[1], max_text_width + side_padding * 2)
     canvas = np.full((crop.shape[0] + header_height, canvas_width, 3), 255, dtype=np.uint8)
     crop_x = (canvas_width - crop.shape[1]) // 2
-    canvas[header_height:, crop_x:crop_x + crop.shape[1]] = crop
+    canvas[header_height:, crop_x : crop_x + crop.shape[1]] = crop
     cv2.rectangle(canvas, (0, 0), (canvas.shape[1] - 1, header_height - 1), (245, 247, 250), -1)
     cv2.line(canvas, (0, header_height - 1), (canvas.shape[1] - 1, header_height - 1), (210, 214, 220), 1)
     for idx, line in enumerate(lines):
@@ -519,7 +529,7 @@ def render_adjacent_frame_guide_lines(
 ) -> None:
     image_height, image_width = image.shape[:2]
     y_value = delta_y - height_max
-    y = int(round(float(y_value)))
+    y = round(float(y_value))
     if y < 0 or y >= image_height:
         return
     color = (0, 255, 255)
@@ -598,7 +608,9 @@ def save_adjusted_predictions(
             xywhn_rows = boxes.xywhn.tolist()
             conf_rows = boxes.conf.tolist()
             cls_rows = boxes.cls.tolist()
-            for det_index, (xyxy, xywhn, raw_conf, raw_cls) in enumerate(zip(xyxy_rows, xywhn_rows, conf_rows, cls_rows)):
+            for det_index, (xyxy, xywhn, raw_conf, raw_cls) in enumerate(
+                zip(xyxy_rows, xywhn_rows, conf_rows, cls_rows)
+            ):
                 x1, y1, x2, y2 = [float(value) for value in xyxy]
                 cls_id = int(raw_cls)
                 conf = float(raw_conf)
@@ -640,12 +652,14 @@ def save_adjusted_predictions(
                 actual_vertical_edge_type = edge_type
                 actual_vertical_edge_span_score = 0.0
                 if actual_vertical_edge_type in {"top", "bottom", "top_bottom"}:
-                    ix1 = max(0, min(image.shape[1] - 1, int(round(x1))))
-                    iy1 = max(0, min(image.shape[0] - 1, int(round(y1))))
-                    ix2 = max(ix1 + 1, min(image.shape[1], int(round(x2))))
-                    iy2 = max(iy1 + 1, min(image.shape[0], int(round(y2))))
+                    ix1 = max(0, min(image.shape[1] - 1, round(x1)))
+                    iy1 = max(0, min(image.shape[0] - 1, round(y1)))
+                    ix2 = max(ix1 + 1, min(image.shape[1], round(x2)))
+                    iy2 = max(iy1 + 1, min(image.shape[0], round(y2)))
                     actual_crop = image[iy1:iy2, ix1:ix2]
-                    actual_vertical_edge_span_score = compute_edge_span_ratio_from_crop(actual_crop, actual_vertical_edge_type)
+                    actual_vertical_edge_span_score = compute_edge_span_ratio_from_crop(
+                        actual_crop, actual_vertical_edge_type
+                    )
                 phase2 = classify_vertical_edge_box(
                     image=image,
                     x1=x1,
@@ -656,7 +670,9 @@ def save_adjusted_predictions(
                     intact_aspect_ratio_threshold=vertical_intact_aspect_ratio_threshold,
                     edge_span_threshold=vertical_edge_span_threshold,
                     edge_span_threshold_thin=vertical_edge_span_threshold_thin,
-                    precomputed_edge_span_score=actual_vertical_edge_span_score if actual_vertical_edge_type in {"top", "bottom", "top_bottom"} else None,
+                    precomputed_edge_span_score=actual_vertical_edge_span_score
+                    if actual_vertical_edge_type in {"top", "bottom", "top_bottom"}
+                    else None,
                 )
                 horizontal_applied = any(
                     rule_name in {"horizontal_edge_penalty", "horizontal_short_edge_penalty"}
@@ -666,7 +682,7 @@ def save_adjusted_predictions(
                     conf *= float(vertical_defective_penalty_factor)
                     applied_rules.append("vertical_defective_penalty")
                 elif vertical_rule_enabled and not horizontal_applied and phase2["decision"] == "intact":
-                    applied_rules.append(f'vertical_{phase2["reason"]}')
+                    applied_rules.append(f"vertical_{phase2['reason']}")
 
                 detections.append(
                     {
@@ -763,10 +779,7 @@ def save_adjusted_predictions(
         output_name = str(frame_entry["output_name"])
         output_path = Path(frame_entry["output_path"])
         all_detections = list(frame_entry["detections"])
-        detections = [
-            det for det in all_detections
-            if not bool(det.get("temporal_suppressed"))
-        ]
+        detections = [det for det in all_detections if not bool(det.get("temporal_suppressed"))]
 
         if render_adjacent_frame_guides and adjacent_frame_dedup:
             render_adjacent_frame_guide_lines(
@@ -781,30 +794,30 @@ def save_adjusted_predictions(
             for det in detections:
                 fields = [
                     str(int(det["class_id"])),
-                    f'{det["x_center"]:.6f}',
-                    f'{det["y_center"]:.6f}',
-                    f'{det["width"]:.6f}',
-                    f'{det["height"]:.6f}',
+                    f"{det['x_center']:.6f}",
+                    f"{det['y_center']:.6f}",
+                    f"{det['width']:.6f}",
+                    f"{det['height']:.6f}",
                 ]
                 if save_conf:
-                    fields.append(f'{det["conf"]:.6f}')
+                    fields.append(f"{det['conf']:.6f}")
                 lines.append(" ".join(fields))
             label_path.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
 
         for det in detections:
             color = color_for_class(int(det["class_id"]))
-            x1 = max(0, min(image_width - 1, int(round(float(det["x1"])))))
-            y1 = max(0, min(image_height - 1, int(round(float(det["y1"])))))
-            x2 = max(0, min(image_width - 1, int(round(float(det["x2"])))))
-            y2 = max(0, min(image_height - 1, int(round(float(det["y2"])))))
+            x1 = max(0, min(image_width - 1, round(float(det["x1"]))))
+            y1 = max(0, min(image_height - 1, round(float(det["y1"]))))
+            x2 = max(0, min(image_width - 1, round(float(det["x2"]))))
+            y2 = max(0, min(image_height - 1, round(float(det["y2"]))))
             cv2.rectangle(image, (x1, y1), (x2, y2), color, 2, cv2.LINE_AA)
-            conf_text = f'{float(det["conf"]):.2f}'
-            label = f'{int(det["class_id"])} {conf_text}'
+            conf_text = f"{float(det['conf']):.2f}"
+            label = f"{int(det['class_id'])} {conf_text}"
             if hasattr(result, "names") and int(det["class_id"]) in result.names:
-                label = f'{result.names[int(det["class_id"])]} {conf_text}'
+                label = f"{result.names[int(det['class_id'])]} {conf_text}"
             decision = det["phase2_decision"]
             if decision:
-                label += f' {decision}'
+                label += f" {decision}"
             (text_width, text_height), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.55, 2)
             text_top = max(0, y1 - text_height - baseline - 8)
             text_bottom = min(image_height - 1, text_top + text_height + baseline + 8)
@@ -861,7 +874,11 @@ def save_adjusted_predictions(
             )
             if penalty_hits_dir is not None:
                 for rule_name in det["applied_rules"]:
-                    if rule_name not in {"horizontal_edge_penalty", "horizontal_short_edge_penalty", "vertical_defective_penalty"}:
+                    if rule_name not in {
+                        "horizontal_edge_penalty",
+                        "horizontal_short_edge_penalty",
+                        "vertical_defective_penalty",
+                    }:
                         continue
                     preview_name = (
                         f"{Path(output_name).stem}__det{int(det['det_index']):02d}"
