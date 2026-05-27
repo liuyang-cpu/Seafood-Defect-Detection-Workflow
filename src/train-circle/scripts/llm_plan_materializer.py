@@ -26,7 +26,9 @@ def format_run_stamp(dt: datetime) -> str:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate an LLM planner response and convert it into a runnable search plan.")
+    parser = argparse.ArgumentParser(
+        description="Validate an LLM planner response and convert it into a runnable search plan."
+    )
     parser.add_argument("--planner-response", type=str, required=True, help="Path to planner_response.json")
     parser.add_argument("--payload", type=str, default=None, help="Optional planner_payload.json path")
     parser.add_argument("--search-space", type=str, default=None, help="Optional search-space JSON path")
@@ -82,7 +84,9 @@ def materialize_from_paths(
             "payload_path": str(payload_path) if payload_path.exists() else None,
         },
     )
-    write_json(plan_dir / "materializer_meta.json", {"validation": "passed", "manifest_path": str(plan_dir / "manifest.json")})
+    write_json(
+        plan_dir / "materializer_meta.json", {"validation": "passed", "manifest_path": str(plan_dir / "manifest.json")}
+    )
     return {
         "plan_dir": str(plan_dir),
         "manifest_path": str(plan_dir / "manifest.json"),
