@@ -20,9 +20,9 @@ def main() -> int:
     class_file = Path(args.class_file).resolve()
     save_dir = Path(args.save_dir).resolve()
 
+    from labelImg.labelImg import MainWindow
     from PyQt5.QtCore import QTimer
     from PyQt5.QtWidgets import QApplication
-    from labelImg.labelImg import MainWindow
 
     app = QApplication(sys.argv)
     image_dir = image_path.parent
