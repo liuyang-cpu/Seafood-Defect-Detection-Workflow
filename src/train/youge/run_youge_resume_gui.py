@@ -81,16 +81,24 @@ class ResumeRunnerApp:
             self.advanced_frame.columnconfigure(index, weight=1 if index in (1, 3, 5) else 0)
 
         ttk.Label(self.advanced_frame, text="设备").grid(row=0, column=0, sticky="w")
-        ttk.Entry(self.advanced_frame, textvariable=self.device_var, width=12).grid(row=0, column=1, sticky="w", padx=(6, 16))
+        ttk.Entry(self.advanced_frame, textvariable=self.device_var, width=12).grid(
+            row=0, column=1, sticky="w", padx=(6, 16)
+        )
 
         ttk.Label(self.advanced_frame, text="Batch").grid(row=0, column=2, sticky="w")
-        ttk.Entry(self.advanced_frame, textvariable=self.batch_var, width=12).grid(row=0, column=3, sticky="w", padx=(6, 16))
+        ttk.Entry(self.advanced_frame, textvariable=self.batch_var, width=12).grid(
+            row=0, column=3, sticky="w", padx=(6, 16)
+        )
 
         ttk.Label(self.advanced_frame, text="Imgsz").grid(row=0, column=4, sticky="w")
-        ttk.Entry(self.advanced_frame, textvariable=self.imgsz_var, width=12).grid(row=0, column=5, sticky="w", padx=(6, 0))
+        ttk.Entry(self.advanced_frame, textvariable=self.imgsz_var, width=12).grid(
+            row=0, column=5, sticky="w", padx=(6, 0)
+        )
 
         ttk.Label(self.advanced_frame, text="Workers").grid(row=0, column=6, sticky="w", padx=(16, 0))
-        ttk.Entry(self.advanced_frame, textvariable=self.workers_var, width=12).grid(row=0, column=7, sticky="w", padx=(6, 0))
+        ttk.Entry(self.advanced_frame, textvariable=self.workers_var, width=12).grid(
+            row=0, column=7, sticky="w", padx=(6, 0)
+        )
 
         info_frame = ttk.LabelFrame(frame, text="续训摘要", padding=10)
         info_frame.grid(row=3, column=0, columnspan=3, sticky="ew", pady=(0, 8))

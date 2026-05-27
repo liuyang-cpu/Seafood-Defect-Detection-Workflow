@@ -40,7 +40,11 @@ def main() -> None:
         history_payloads=history_payloads,
     )
 
-    output_path = Path(args.output).resolve() if args.output else script_path.parent.parent / "artifacts" / "llm_planner_mock_payload.json"
+    output_path = (
+        Path(args.output).resolve()
+        if args.output
+        else script_path.parent.parent / "artifacts" / "llm_planner_mock_payload.json"
+    )
     write_json(output_path, payload)
     print(f"Mock payload written to: {output_path}")
 
