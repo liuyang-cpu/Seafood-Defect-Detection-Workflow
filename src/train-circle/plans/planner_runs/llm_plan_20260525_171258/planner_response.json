@@ -13,26 +13,11 @@
     "flipud": 0.0
   },
   "range_updates": {
-    "epochs": [
-      80,
-      120
-    ],
-    "mosaic": [
-      0.0,
-      0.1
-    ],
-    "translate": [
-      0.02,
-      0.05
-    ],
-    "scale": [
-      0.15,
-      0.25
-    ],
-    "erasing": [
-      0.0,
-      0.1
-    ]
+    "epochs": [80, 120],
+    "mosaic": [0.0, 0.1],
+    "translate": [0.02, 0.05],
+    "scale": [0.15, 0.25],
+    "erasing": [0.0, 0.1]
   },
   "recommended_runs": [
     {

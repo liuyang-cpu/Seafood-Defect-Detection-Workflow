@@ -11,17 +11,16 @@ from planner_common import (
     build_planner_payload,
     choose_baseline_run,
     default_base_config_json,
+    default_runs_train_dir,
     default_search_space_json,
     default_summary_csv,
     default_task_context,
-    default_runs_train_dir,
     find_repo_root,
     load_history_from_run_summaries,
     load_json,
     load_summary_rows,
     write_json,
 )
-
 
 DEFAULT_MODEL = "gpt-5.4-mini"
 DEFAULT_PROVIDER = "openai"
@@ -40,7 +39,9 @@ def format_run_stamp(dt: datetime) -> str:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Call OpenAI Responses API to generate the next youge training plan.")
     parser.add_argument("--config", type=str, default=None, help="Optional planner config JSON path.")
-    parser.add_argument("--provider", type=str, default=None, choices=("openai", "deepseek"), help="LLM provider override.")
+    parser.add_argument(
+        "--provider", type=str, default=None, choices=("openai", "deepseek"), help="LLM provider override."
+    )
     parser.add_argument("--model", type=str, default=None, help="Model id override.")
     parser.add_argument("--base-url", type=str, default=None, help="Base URL override for OpenAI-compatible clients.")
     parser.add_argument("--summary-csv", type=str, default=None, help="Optional summary.csv path.")
@@ -148,14 +149,18 @@ def call_deepseek_chat(*, api_key: str, base_url: str, model: str, messages: lis
     content = response.choices[0].message.content if response.choices else None
     if not content:
         raise RuntimeError("The DeepSeek response did not include message content.")
-    return json.loads(content), response.model_dump() if hasattr(response, "model_dump") else json.loads(response.json())
+    return json.loads(content), response.model_dump() if hasattr(response, "model_dump") else json.loads(
+        response.json()
+    )
 
 
 def main() -> None:
     args = parse_args()
     script_path = Path(__file__).resolve()
     repo_root = find_repo_root(script_path.parent)
-    config_path = Path(args.config).resolve() if args.config else script_path.parent.parent / "config" / "llm_planner.config.json"
+    config_path = (
+        Path(args.config).resolve() if args.config else script_path.parent.parent / "config" / "llm_planner.config.json"
+    )
     config_payload = load_config(config_path)
     settings = resolve_settings(args, config_payload)
 
@@ -166,20 +171,33 @@ def main() -> None:
     output_root.mkdir(parents=True, exist_ok=True)
 
     search_space_payload = load_json(search_space_path)
-    base_config_payload = load_json(base_config_path)
+    load_json(base_config_path)
     schema_payload = load_json(script_path.parent.parent / "docs" / "llm_planner_response_schema.json")
 
     all_history_payloads = load_history_from_run_summaries(default_runs_train_dir(repo_root), max_history=None)
-    history_payloads = all_history_payloads[: max(0, args.max_history)] if args.max_history is not None else list(all_history_payloads)
+    history_payloads = (
+        all_history_payloads[: max(0, args.max_history)] if args.max_history is not None else list(all_history_payloads)
+    )
     if not all_history_payloads:
         # fallback to summary rows if historical run summaries are unavailable
         summary_rows = load_summary_rows(summary_csv, args.max_history)
-        history_payloads = [{"train_run_name": row.get("run_name"), "version": row.get("version"), "best_metrics": {
-            "precision": row.get("precision"),
-            "recall": row.get("recall"),
-            "map50": row.get("map50"),
-            "map50_95": row.get("map50_95"),
-        }, "epochs_completed": row.get("epochs"), "best_epoch": row.get("best_epoch"), "elapsed_seconds": row.get("elapsed_seconds"), "train_config": row} for row in summary_rows]
+        history_payloads = [
+            {
+                "train_run_name": row.get("run_name"),
+                "version": row.get("version"),
+                "best_metrics": {
+                    "precision": row.get("precision"),
+                    "recall": row.get("recall"),
+                    "map50": row.get("map50"),
+                    "map50_95": row.get("map50_95"),
+                },
+                "epochs_completed": row.get("epochs"),
+                "best_epoch": row.get("best_epoch"),
+                "elapsed_seconds": row.get("elapsed_seconds"),
+                "train_config": row,
+            }
+            for row in summary_rows
+        ]
         all_history_payloads = list(history_payloads)
 
     payload = build_planner_payload(
