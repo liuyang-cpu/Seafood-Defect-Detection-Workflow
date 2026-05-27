@@ -79,8 +79,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timeout-seconds", type=int, default=None, help="Override study timeout in seconds.")
     parser.add_argument("--metric", type=str, default=None, help="Override objective metric.")
     parser.add_argument("--sampler", type=str, default=None, choices=("tpe", "random"), help="Override sampler type.")
-    parser.add_argument("--enqueue-baseline", action="store_true", help="Enqueue one baseline-like trial before search.")
-    parser.add_argument("--top-k-report", type=int, default=20, help="Number of completed trials to include in report charts.")
+    parser.add_argument(
+        "--enqueue-baseline", action="store_true", help="Enqueue one baseline-like trial before search."
+    )
+    parser.add_argument(
+        "--top-k-report", type=int, default=20, help="Number of completed trials to include in report charts."
+    )
     return parser.parse_args()
 
 
@@ -266,7 +270,9 @@ def load_run_summary_from_result(
 
 
 def export_best_trial(study: Any, study_dir: Path, base_config: dict[str, Any]) -> None:
-    completed_trials = [trial for trial in study.trials if getattr(trial.state, "name", "") == "COMPLETE" and trial.value is not None]
+    completed_trials = [
+        trial for trial in study.trials if getattr(trial.state, "name", "") == "COMPLETE" and trial.value is not None
+    ]
     if not completed_trials:
         return
     best_trial = study.best_trial
@@ -328,7 +334,11 @@ def main() -> None:
     base_config = load_json(base_config_path)
     search_space_payload = load_json(search_space_path)
     search_space = resolve_search_space(config, search_space_payload)
-    fixed_recommendations = dict(search_space_payload.get("fixed_recommendations") or {}) if config.get("use_fixed_recommendations", True) else {}
+    fixed_recommendations = (
+        dict(search_space_payload.get("fixed_recommendations") or {})
+        if config.get("use_fixed_recommendations", True)
+        else {}
+    )
     fixed_recommendations.pop("_comment", None)
     fixed_overrides = dict(config.get("fixed_overrides") or {})
     metric_name = str(args.metric or config.get("metric") or "map50_95")
@@ -502,12 +512,18 @@ def main() -> None:
         )
         return score
 
-    catch_types = (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError, RuntimeError) if continue_on_failure else ()
+    catch_types = (
+        (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError, RuntimeError)
+        if continue_on_failure
+        else ()
+    )
     study.optimize(objective, n_trials=n_trials, timeout=timeout_seconds, catch=catch_types)
 
     export_best_trial(study, study_dir, base_config)
     report_result = generate_study_report(study_dir, storage=storage, top_k=args.top_k_report)
-    completed_trials = [trial for trial in study.trials if getattr(trial.state, "name", "") == "COMPLETE" and trial.value is not None]
+    completed_trials = [
+        trial for trial in study.trials if getattr(trial.state, "name", "") == "COMPLETE" and trial.value is not None
+    ]
     best_value_text = str(study.best_value) if completed_trials else "n/a"
     print(f"Study complete: {study.study_name}")
     print(f"Best value: {best_value_text}")

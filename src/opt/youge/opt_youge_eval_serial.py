@@ -4,10 +4,10 @@ import argparse
 import csv
 import html
 import json
-from decimal import Decimal, InvalidOperation
 import shutil
 import subprocess
 import sys
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 
@@ -412,7 +412,9 @@ def write_batch_html(batch_dir: Path, rows: list[dict], meta: dict) -> None:
     best_recall = max(rows, key=lambda item: item["recall"])
     predict_params = meta.get("predict_params", {})
     predict_param_text = " | ".join(
-        f"{key}={predict_params[key]}" for key in ("conf", "iou", "edge_penalty", "edge_touch_px", "flat_ratio_threshold", "edge_penalty_factor") if key in predict_params
+        f"{key}={predict_params[key]}"
+        for key in ("conf", "iou", "edge_penalty", "edge_touch_px", "flat_ratio_threshold", "edge_penalty_factor")
+        if key in predict_params
     )
     html_text = "\n".join(
         [
@@ -525,12 +527,20 @@ def main() -> None:
     project_dir = resolve_project_dir(args, script_dir)
     version = normalize_version(args.version)
     if version is None:
-        version = extract_version_from_text(args.name_prefix) or extract_version_from_text(args.batch_name) or extract_version_from_text(args.predict_name)
+        version = (
+            extract_version_from_text(args.name_prefix)
+            or extract_version_from_text(args.batch_name)
+            or extract_version_from_text(args.predict_name)
+        )
     if version is None:
         predict_runs_dir = repo_root / "src" / "predict" / (args.species or "youge") / "runs" / "predict"
         latest_predict_name = find_latest_versioned_dir_name(predict_runs_dir, args.predict_name or "youge_predict")
         version = extract_version_from_text(latest_predict_name)
-    predict_name = build_versioned_name("youge_predict", version) if not args.predict_name else build_versioned_name(args.predict_name, version)
+    predict_name = (
+        build_versioned_name("youge_predict", version)
+        if not args.predict_name
+        else build_versioned_name(args.predict_name, version)
+    )
     predict_run_dir = repo_root / "src" / "predict" / (args.species or "youge") / "runs" / "predict" / predict_name
     predict_run_config = load_predict_run_config(predict_run_dir)
     predict_params = {
@@ -612,7 +622,9 @@ def main() -> None:
     write_batch_json(batch_dir, {"meta": meta, "runs": runs})
     write_batch_html(batch_dir, runs, meta)
     export_identifier = build_export_identifier(version, predict_params)
-    exported_dir = export_batch_to_model_output(batch_dir, get_model_output_dir(repo_root, args.species or "youge"), export_identifier)
+    exported_dir = export_batch_to_model_output(
+        batch_dir, get_model_output_dir(repo_root, args.species or "youge"), export_identifier
+    )
     print(f"Batch summary report generated at: {batch_dir}")
     print(f"Exported model-output summary at: {exported_dir}")
 
