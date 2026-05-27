@@ -4,12 +4,7 @@
   "title": "LLM Planner Response",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "observations",
-    "frozen_params",
-    "range_updates",
-    "recommended_runs"
-  ],
+  "required": ["observations", "frozen_params", "range_updates", "recommended_runs"],
   "properties": {
     "observations": {
       "type": "array",
@@ -23,13 +18,7 @@
     "frozen_params": {
       "type": "object",
       "additionalProperties": {
-        "type": [
-          "number",
-          "integer",
-          "string",
-          "boolean",
-          "null"
-        ]
+        "type": ["number", "integer", "string", "boolean", "null"]
       }
     },
     "range_updates": {
@@ -39,12 +28,7 @@
         "minItems": 1,
         "maxItems": 10,
         "items": {
-          "type": [
-            "number",
-            "integer",
-            "string",
-            "boolean"
-          ]
+          "type": ["number", "integer", "string", "boolean"]
         }
       }
     },
@@ -55,11 +39,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "label",
-          "reason",
-          "overrides"
-        ],
+        "required": ["label", "reason", "overrides"],
         "properties": {
           "label": {
             "type": "string",
@@ -76,12 +56,7 @@
             "type": "object",
             "minProperties": 1,
             "additionalProperties": {
-              "type": [
-                "number",
-                "integer",
-                "string",
-                "boolean"
-              ]
+              "type": ["number", "integer", "string", "boolean"]
             }
           }
         }
@@ -89,4 +64,3 @@
     }
   }
 }
-
