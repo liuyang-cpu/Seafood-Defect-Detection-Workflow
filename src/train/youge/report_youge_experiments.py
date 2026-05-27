@@ -10,7 +10,6 @@ from typing import Any
 
 import yaml
 
-
 VERSION_PATTERN = re.compile(r"version(\d+)", re.IGNORECASE)
 
 
@@ -109,7 +108,9 @@ def _build_fallback_summary(run_dir: Path) -> dict[str, Any] | None:
 
 def load_run_summaries(runs_dir: Path) -> list[dict[str, Any]]:
     summaries: list[dict[str, Any]] = []
-    for run_dir in sorted((path for path in runs_dir.iterdir() if path.is_dir()), key=lambda path: path.stat().st_mtime):
+    for run_dir in sorted(
+        (path for path in runs_dir.iterdir() if path.is_dir()), key=lambda path: path.stat().st_mtime
+    ):
         summary_path = run_dir / "run_summary.json"
         if summary_path.exists():
             summaries.append(json.loads(summary_path.read_text(encoding="utf-8")))
@@ -245,7 +246,7 @@ def render_chart(rows: list[dict[str, Any]], output_path: Path, top_k: int) -> N
 def main() -> None:
     args = parse_args()
     script_path = Path(__file__).resolve()
-    repo_root = find_repo_root(script_path.parent)
+    find_repo_root(script_path.parent)
     runs_dir = Path(args.runs_dir).resolve() if args.runs_dir else script_path.parent / "runs" / "train"
     output_root = Path(args.output_dir).resolve() if args.output_dir else script_path.parent / "runs" / "reports"
     output_root.mkdir(parents=True, exist_ok=True)

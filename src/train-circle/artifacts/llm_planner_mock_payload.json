@@ -3,17 +3,9 @@
     "project": "youge",
     "model_family": "YOLO11n",
     "dataset_name": "youge",
-    "problem_summary": [
-      "相邻帧截断框误分类",
-      "边缘目标稳定性不足",
-      "小目标更敏感"
-    ],
+    "problem_summary": ["相邻帧截断框误分类", "边缘目标稳定性不足", "小目标更敏感"],
     "primary_objective": "优先改善截断目标和边缘目标的检测稳定性，同时关注总体 mAP50-95",
-    "notes": [
-      "相机固定",
-      "场景几何变化较小",
-      "增强不宜过强"
-    ]
+    "notes": ["相机固定", "场景几何变化较小", "增强不宜过强"]
   },
   "baseline_run": {
     "label": "epochs100_augM_mosaic005",
@@ -49,23 +41,11 @@
     }
   },
   "search_space": {
-    "allowed_params": [
-      "imgsz",
-      "epochs",
-      "mosaic",
-      "translate",
-      "scale",
-      "erasing",
-      "amp"
-    ],
+    "allowed_params": ["imgsz", "epochs", "mosaic", "translate", "scale", "erasing", "amp"],
     "param_space": {
       "imgsz": {
         "type": "categorical",
-        "values": [
-          640,
-          768,
-          896
-        ]
+        "values": [640, 768, 896]
       },
       "epochs": {
         "type": "int",
@@ -95,10 +75,7 @@
       },
       "amp": {
         "type": "categorical",
-        "values": [
-          false,
-          true
-        ]
+        "values": [false, true]
       }
     },
     "frozen_defaults": {
