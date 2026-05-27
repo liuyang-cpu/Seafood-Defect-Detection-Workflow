@@ -94,7 +94,21 @@ def build_stage1_grid_experiments(search_space: dict) -> list[dict]:
 
 
 def split_overrides(overrides: dict) -> tuple[dict, dict]:
-    direct_keys = {"epochs", "imgsz", "batch", "device", "workers", "project", "name", "version", "patience", "mosaic", "cache", "exist_ok", "amp"}
+    direct_keys = {
+        "epochs",
+        "imgsz",
+        "batch",
+        "device",
+        "workers",
+        "project",
+        "name",
+        "version",
+        "patience",
+        "mosaic",
+        "cache",
+        "exist_ok",
+        "amp",
+    }
     direct_config: dict = {}
     extra_train_args: dict = {}
     for key, value in overrides.items():
@@ -110,8 +124,14 @@ def main() -> None:
 
     script_path = Path(__file__).resolve()
     repo_root = find_repo_root(script_path.parent)
-    search_space_path = Path(args.search_space).resolve() if args.search_space else script_path.with_name("train_youge_search_space.json")
-    base_config_path = Path(args.base_config).resolve() if args.base_config else script_path.with_name("train_youge.json")
+    search_space_path = (
+        Path(args.search_space).resolve()
+        if args.search_space
+        else script_path.with_name("train_youge_search_space.json")
+    )
+    base_config_path = (
+        Path(args.base_config).resolve() if args.base_config else script_path.with_name("train_youge.json")
+    )
     train_script_path = script_path.with_name("train_youge.py")
 
     if not search_space_path.exists():

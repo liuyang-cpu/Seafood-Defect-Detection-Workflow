@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-
 DIRECT_CONFIG_KEYS = {
     "epochs",
     "imgsz",
@@ -117,4 +116,3 @@ def resolve_metric_value(run_summary: dict[str, Any], metric_name: str) -> float
         return float(raw)
     except (TypeError, ValueError):
         return None
-
