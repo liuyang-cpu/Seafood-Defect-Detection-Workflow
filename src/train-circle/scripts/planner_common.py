@@ -7,7 +7,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-
 ALLOWED_PLANNER_PARAMS = ("imgsz", "epochs", "mosaic", "translate", "scale", "erasing", "amp")
 DEFAULT_SCHEMA_NAME = "youge_training_plan"
 SAFE_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$")
@@ -87,7 +86,11 @@ def load_history_from_run_summaries(runs_train_dir: Path, max_history: int | Non
     if not runs_train_dir.exists():
         return rows
 
-    run_dirs = sorted((path for path in runs_train_dir.iterdir() if path.is_dir()), key=lambda path: path.stat().st_mtime, reverse=True)
+    run_dirs = sorted(
+        (path for path in runs_train_dir.iterdir() if path.is_dir()),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
     for run_dir in run_dirs:
         summary_path = run_dir / "run_summary.json"
         if not summary_path.exists():
@@ -123,7 +126,16 @@ def build_history_summary(history_payloads: list[dict[str, Any]]) -> list[dict[s
                     "amp": train_config.get("amp"),
                     "extra_train_args": {
                         key: extra.get(key)
-                        for key in ("translate", "scale", "erasing", "mixup", "copy_paste", "degrees", "shear", "perspective")
+                        for key in (
+                            "translate",
+                            "scale",
+                            "erasing",
+                            "mixup",
+                            "copy_paste",
+                            "degrees",
+                            "shear",
+                            "perspective",
+                        )
                         if key in extra
                     },
                 },

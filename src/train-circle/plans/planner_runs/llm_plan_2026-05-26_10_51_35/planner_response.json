@@ -15,30 +15,12 @@
     "perspective": 0.0
   },
   "range_updates": {
-    "translate": [
-      0.02,
-      0.05
-    ],
-    "scale": [
-      0.15,
-      0.25
-    ],
-    "erasing": [
-      0.0,
-      0.1
-    ],
-    "mosaic": [
-      0.1,
-      0.2
-    ],
-    "epochs": [
-      90,
-      120
-    ],
-    "imgsz": [
-      640,
-      768
-    ]
+    "translate": [0.02, 0.05],
+    "scale": [0.15, 0.25],
+    "erasing": [0.0, 0.1],
+    "mosaic": [0.1, 0.2],
+    "epochs": [90, 120],
+    "imgsz": [640, 768]
   },
   "recommended_runs": [
     {

@@ -3,12 +3,11 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
-from datetime import datetime, timezone
 import re
 import shutil
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
-
 
 IMAGE_EXTENSIONS = {".bmp", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 VERSION_PATTERN = re.compile(r"version(\d+)", re.IGNORECASE)
@@ -81,7 +80,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", type=str, default=None, help="Path to a JSON config file.")
     parser.add_argument("--weights", type=str, default=None, help="Path to model weights.")
     parser.add_argument("--source", type=str, default=None, help="Prediction source, e.g. image, folder, video.")
-    parser.add_argument("--split", type=str, choices=("train", "val", "both"), default=None, help="Dataset split shortcut under datasets/data/youge/images.")
+    parser.add_argument(
+        "--split",
+        type=str,
+        choices=("train", "val", "both"),
+        default=None,
+        help="Dataset split shortcut under datasets/data/youge/images.",
+    )
     parser.add_argument("--imgsz", type=int, default=None, help="Inference image size.")
     parser.add_argument("--device", type=str, default=None, help="Inference device, e.g. 0 or cpu.")
     parser.add_argument("--conf", type=float, default=None, help="Confidence threshold.")
@@ -248,7 +253,7 @@ def parse_args() -> argparse.Namespace:
         "--vertical-rule",
         action=argparse.BooleanOptionalAction,
         default=None,
-        help="Enable rule-based intact/defective judgement for top/bottom edge boxes.",
+        help="Enable rule-based intact/defective judgment for top/bottom edge boxes.",
     )
     parser.add_argument(
         "--vertical-intact-aspect-ratio-threshold",
@@ -527,11 +532,7 @@ def collect_cli_overrides(args: argparse.Namespace) -> dict:
 
 
 def collect_source_images(image_dir: Path) -> list[Path]:
-    return [
-        path
-        for path in sorted(image_dir.iterdir())
-        if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS
-    ]
+    return [path for path in sorted(image_dir.iterdir()) if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS]
 
 
 def find_versioned_weight_file(model_output_dir: Path, version: str | None = None) -> tuple[Path, str] | None:
@@ -764,7 +765,6 @@ def main() -> None:
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
-    from ultralytics import YOLO
     from src.youge_versioning import (
         build_predict_run_name,
         compute_postprocess_fingerprint,
@@ -772,13 +772,15 @@ def main() -> None:
         get_model_output_dir,
         get_next_postprocess_version,
         get_postprocess_registry_dir,
-        load_version_metadata,
         load_postprocess_index,
-        normalize_version,
+        load_version_metadata,
         normalize_postprocess_version,
+        normalize_version,
         save_postprocess_index,
         save_postprocess_recipe,
     )
+    from ultralytics import YOLO
+
     phase2_postprocess = load_phase2_postprocess_module(repo_root)
 
     dataset_root = repo_root / "datasets" / "data" / "youge"
@@ -792,7 +794,9 @@ def main() -> None:
     version_meta = None
     if predict_config["weights"]:
         weights_path = Path(predict_config["weights"]).resolve()
-        version = version or extract_version_from_text(weights_path.stem) or extract_version_from_text(str(weights_path))
+        version = (
+            version or extract_version_from_text(weights_path.stem) or extract_version_from_text(str(weights_path))
+        )
     else:
         selected = find_versioned_train_weight_file(train_runs_dir, version)
         if selected is None:
@@ -823,7 +827,9 @@ def main() -> None:
         raise ValueError("horizontal_flat_ratio_threshold_short must be > 0")
     if float(predict_config["horizontal_flat_ratio_threshold"]) <= 0:
         raise ValueError("horizontal_flat_ratio_threshold must be > 0")
-    if float(predict_config["horizontal_flat_ratio_threshold_short"]) >= float(predict_config["horizontal_flat_ratio_threshold"]):
+    if float(predict_config["horizontal_flat_ratio_threshold_short"]) >= float(
+        predict_config["horizontal_flat_ratio_threshold"]
+    ):
         raise ValueError("horizontal_flat_ratio_threshold_short must be < horizontal_flat_ratio_threshold")
     if not (0.0 <= float(predict_config["horizontal_edge_span_threshold_short"]) <= 1.0):
         raise ValueError("horizontal_edge_span_threshold_short must be in the range [0, 1]")
