@@ -43,7 +43,7 @@ def html_page(title: str, body: str) -> bytes:
 
 
 class Handler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self) -> None:
         parsed = urlparse(self.path)
         if parsed.path == "/":
             body = "\n".join(
@@ -122,12 +122,16 @@ class Handler(BaseHTTPRequestHandler):
         class_file = Path(query.get("class_file", [""])[0])
         save_dir = Path(query.get("save_dir", [""])[0])
 
-        missing = [name for name, value in {
-            "labelimg_exe": labelimg_exe,
-            "image_dir": image_target,
-            "class_file": class_file,
-            "save_dir": save_dir,
-        }.items() if not str(value)]
+        missing = [
+            name
+            for name, value in {
+                "labelimg_exe": labelimg_exe,
+                "image_dir": image_target,
+                "class_file": class_file,
+                "save_dir": save_dir,
+            }.items()
+            if not str(value)
+        ]
         if missing:
             self.send_error(400, f"Missing query params: {', '.join(missing)}")
             return
@@ -182,7 +186,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(html_page("LabelImg Launched", body))
 
-    def log_message(self, format: str, *args) -> None:  # noqa: A003
+    def log_message(self, format: str, *args) -> None:
         return
 
 

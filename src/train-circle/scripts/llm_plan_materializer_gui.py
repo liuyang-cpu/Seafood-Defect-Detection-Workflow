@@ -12,14 +12,10 @@ from llm_plan_materializer import materialize_from_paths
 def list_plan_dirs(plans_root: Path) -> list[Path]:
     candidates: list[Path] = []
     if plans_root.exists():
-        candidates.extend(
-            path for path in plans_root.iterdir() if path.is_dir() and path.name.startswith("llm_plan_")
-        )
+        candidates.extend(path for path in plans_root.iterdir() if path.is_dir() and path.name.startswith("llm_plan_"))
     legacy_root = plans_root.parent
     if legacy_root.exists() and legacy_root != plans_root:
-        candidates.extend(
-            path for path in legacy_root.iterdir() if path.is_dir() and path.name.startswith("llm_plan_")
-        )
+        candidates.extend(path for path in legacy_root.iterdir() if path.is_dir() and path.name.startswith("llm_plan_"))
     unique = {path.resolve(): path.resolve() for path in candidates}
     return sorted(unique.values(), key=lambda path: path.stat().st_mtime, reverse=True)
 
@@ -59,16 +55,28 @@ class MaterializerGui:
         ttk.Button(plan_frame, text="刷新", command=self.refresh_plan_list).grid(row=0, column=2, sticky="ew")
 
         ttk.Label(plan_frame, text="响应文件").grid(row=1, column=0, sticky="w", pady=(10, 0))
-        ttk.Entry(plan_frame, textvariable=self.response_var).grid(row=1, column=1, sticky="ew", padx=(8, 8), pady=(10, 0))
-        ttk.Button(plan_frame, text="浏览", command=self.choose_response_file).grid(row=1, column=2, sticky="ew", pady=(10, 0))
+        ttk.Entry(plan_frame, textvariable=self.response_var).grid(
+            row=1, column=1, sticky="ew", padx=(8, 8), pady=(10, 0)
+        )
+        ttk.Button(plan_frame, text="浏览", command=self.choose_response_file).grid(
+            row=1, column=2, sticky="ew", pady=(10, 0)
+        )
 
         ttk.Label(plan_frame, text="载荷文件").grid(row=2, column=0, sticky="w", pady=(10, 0))
-        ttk.Entry(plan_frame, textvariable=self.payload_var).grid(row=2, column=1, sticky="ew", padx=(8, 8), pady=(10, 0))
-        ttk.Button(plan_frame, text="浏览", command=self.choose_payload_file).grid(row=2, column=2, sticky="ew", pady=(10, 0))
+        ttk.Entry(plan_frame, textvariable=self.payload_var).grid(
+            row=2, column=1, sticky="ew", padx=(8, 8), pady=(10, 0)
+        )
+        ttk.Button(plan_frame, text="浏览", command=self.choose_payload_file).grid(
+            row=2, column=2, sticky="ew", pady=(10, 0)
+        )
 
         ttk.Label(plan_frame, text="输出目录").grid(row=3, column=0, sticky="w", pady=(10, 0))
-        ttk.Entry(plan_frame, textvariable=self.output_root_var).grid(row=3, column=1, sticky="ew", padx=(8, 8), pady=(10, 0))
-        ttk.Button(plan_frame, text="浏览", command=self.choose_output_dir).grid(row=3, column=2, sticky="ew", pady=(10, 0))
+        ttk.Entry(plan_frame, textvariable=self.output_root_var).grid(
+            row=3, column=1, sticky="ew", padx=(8, 8), pady=(10, 0)
+        )
+        ttk.Button(plan_frame, text="浏览", command=self.choose_output_dir).grid(
+            row=3, column=2, sticky="ew", pady=(10, 0)
+        )
 
         for i, weight in enumerate((0, 1, 0)):
             plan_frame.columnconfigure(i, weight=weight)
@@ -168,7 +176,9 @@ class MaterializerGui:
             self.payload_var.set(path)
 
     def choose_output_dir(self) -> None:
-        path = filedialog.askdirectory(title="选择输出目录", initialdir=self.output_root_var.get() or str(self.materialized_root))
+        path = filedialog.askdirectory(
+            title="选择输出目录", initialdir=self.output_root_var.get() or str(self.materialized_root)
+        )
         if path:
             self.output_root_var.set(path)
 
@@ -201,7 +211,7 @@ class MaterializerGui:
                     payload_path=payload_path,
                     output_root=output_root,
                 )
-            except Exception as exc:
+            except Exception:
                 self.root.after(0, lambda: self.on_error(exc))
                 return
             self.root.after(0, lambda: self.on_success(result))
