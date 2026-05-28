@@ -23,10 +23,12 @@
 
 ## 依赖
 
-至少补上：
+必须使用能够正常执行 `src/train/youge/train_youge.py` 的同一个 Python 环境安装和运行 Optuna。比如本机当前验证可用的 CUDA 环境是 `yolo-pip`：
 
 ```bash
-pip install optuna
+conda activate yolo-pip
+python -m pip install optuna
+python -c "import optuna; from ultralytics import YOLO; import torch; print('ready', torch.cuda.is_available())"
 ```
 
 如果你还没装 `matplotlib`，报表 PNG 会跳过，但 CSV/JSON/Markdown 仍会生成。

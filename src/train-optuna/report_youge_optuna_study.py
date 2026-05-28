@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,11 @@ except ImportError:
 
 def require_optuna() -> Any:
     if optuna is None:
-        raise RuntimeError("Optuna is not installed. Install it with: pip install optuna")
+        raise RuntimeError(
+            f"Optuna is not installed for Python interpreter: {sys.executable}\n"
+            "Activate the environment used for YOLO training, then install and rerun with:\n"
+            "  python -m pip install optuna"
+        )
     return optuna
 
 
@@ -255,4 +260,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

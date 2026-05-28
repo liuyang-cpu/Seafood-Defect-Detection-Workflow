@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -63,7 +64,11 @@ DEFAULT_CONFIG = {
 
 def require_optuna() -> Any:
     if optuna is None:
-        raise RuntimeError("Optuna is not installed. Install it with: pip install optuna")
+        raise RuntimeError(
+            f"Optuna is not installed for Python interpreter: {sys.executable}\n"
+            "Activate the environment used for YOLO training, then install and rerun with:\n"
+            "  python -m pip install optuna"
+        )
     return optuna
 
 
@@ -200,6 +205,83 @@ def build_trial_overrides(
 
 def build_trial_config(base_config: dict[str, Any], trial_overrides: dict[str, Any]) -> dict[str, Any]:
     return apply_overrides(base_config, trial_overrides)
+
+
+def print_trial_banner(
+    *,
+    trial_number: int,
+    total_trials: int,
+    metric_name: str,
+    study_name: str,
+    trial_dir: Path,
+    sampled_overrides: dict[str, Any],
+) -> None:
+    print(f"[Optuna] Trial {trial_number + 1}/{total_trials} started for study={study_name} (trial_{trial_number:04d})")
+    print(f"[Optuna] Objective metric: {metric_name}")
+    print(f"[Optuna] Trial directory: {trial_dir}")
+    print(f"[Optuna] Sampled params: {json.dumps(sampled_overrides, ensure_ascii=False, sort_keys=True)}")
+
+
+def stream_subprocess_output(
+    command: list[str],
+    *,
+    cwd: Path,
+    log_path: Path,
+    timeout_seconds: int | None,
+    display_prefix: str,
+) -> str:
+    output_parts: list[str] = []
+    deadline = time.monotonic() + timeout_seconds if timeout_seconds is not None else None
+    with log_path.open("w", encoding="utf-8") as log_file:
+        process = subprocess.Popen(
+            command,
+            cwd=str(cwd),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            bufsize=1,
+        )
+        try:
+            if process.stdout is None:
+                raise RuntimeError("Unable to capture subprocess stdout.")
+            while True:
+                if deadline is not None and time.monotonic() > deadline:
+                    process.kill()
+                    process.wait()
+                    raise subprocess.TimeoutExpired(command, timeout_seconds, output="".join(output_parts))
+
+                line = process.stdout.readline()
+                if line:
+                    print(f"{display_prefix}{line}", end="")
+                    log_file.write(line)
+                    log_file.flush()
+                    output_parts.append(line)
+                    continue
+
+                if process.poll() is not None:
+                    break
+
+            remainder = process.stdout.read()
+            if remainder:
+                for line in remainder.splitlines(keepends=True):
+                    print(f"{display_prefix}{line}", end="")
+                log_file.write(remainder)
+                log_file.flush()
+                output_parts.append(remainder)
+
+            returncode = process.wait()
+        except Exception:
+            if process.poll() is None:
+                process.kill()
+                process.wait()
+            raise
+
+    output_text = "".join(output_parts)
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, command, output=output_text)
+    return output_text
 
 
 def parse_train_output(output_text: str) -> tuple[Path | None, str | None]:
@@ -409,20 +491,24 @@ def main() -> None:
 
         command = [sys.executable, str(train_script_path), "--config", str(config_output_path)]
         started_at = datetime.now()
+        print_trial_banner(
+            trial_number=trial.number,
+            total_trials=n_trials,
+            metric_name=metric_name,
+            study_name=study_name,
+            trial_dir=trial_dir,
+            sampled_overrides=sampled_overrides,
+        )
         try:
-            completed = subprocess.run(
+            output_text = stream_subprocess_output(
                 command,
-                cwd=str(repo_root),
-                check=True,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=subprocess_timeout,
+                cwd=repo_root,
+                log_path=trial_dir / "train.log",
+                timeout_seconds=subprocess_timeout,
+                display_prefix=f"[Trial {trial.number + 1}/{n_trials}] ",
             )
         except subprocess.CalledProcessError as exc:
-            log_text = (exc.stdout or "") + ("\n" + exc.stderr if exc.stderr else "")
-            (trial_dir / "train.log").write_text(log_text, encoding="utf-8")
+            print(f"[Optuna] Trial {trial.number:04d} failed with returncode={exc.returncode}. Log: {trial_dir / 'train.log'}")
             write_json(
                 trial_dir / "trial_result.json",
                 {
@@ -436,8 +522,13 @@ def main() -> None:
             )
             raise
         except subprocess.TimeoutExpired as exc:
-            log_text = (exc.stdout or "") + ("\n" + exc.stderr if exc.stderr else "")
-            (trial_dir / "train.log").write_text(log_text, encoding="utf-8")
+            log_text = str(exc.output or exc.stdout or "")
+            if log_text:
+                (trial_dir / "train.log").write_text(log_text, encoding="utf-8")
+            print(
+                f"[Optuna] Trial {trial.number:04d} timed out after {subprocess_timeout}s. "
+                f"Log: {trial_dir / 'train.log'}"
+            )
             write_json(
                 trial_dir / "trial_result.json",
                 {
@@ -450,9 +541,6 @@ def main() -> None:
                 },
             )
             raise
-
-        output_text = (completed.stdout or "") + ("\n" + completed.stderr if completed.stderr else "")
-        (trial_dir / "train.log").write_text(output_text, encoding="utf-8")
 
         run_dir, version = parse_train_output(output_text)
         run_summary = load_run_summary_from_result(
@@ -499,6 +587,10 @@ def main() -> None:
                 "started_at": started_at.isoformat(timespec="seconds"),
                 "finished_at": datetime.now().isoformat(timespec="seconds"),
             },
+        )
+        print(
+            f"[Optuna] Trial {trial.number:04d} complete: {metric_name}={score:.6f}, "
+            f"version={version or run_summary.get('version')}, run_dir={run_summary.get('train_run_dir')}"
         )
         return score
 
