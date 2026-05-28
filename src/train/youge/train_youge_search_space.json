@@ -1,5 +1,5 @@
 {
-  "_comment": "youge 训练调参搜索空间。重点针对相邻帧截断框误分类：提高分辨率、拉长训练、减弱过强增强、避免不真实的形态扰动。",
+  "_comment": "youge 训练调参搜索空间。重点针对相邻帧截断框误分类：提高分辨率、拉长训练、减弱过强增强、避免不真实的形态扰动。原图约 1536x300，属于超宽图，imgsz 与 rect 策略需区别于通用方图任务。",
   "baseline_version": "version003",
   "baseline_observed_args": {
     "epochs": 30,
@@ -22,19 +22,8 @@
     "hsv_v": 0.4,
     "erasing": 0.4
   },
-  "stage1_recommended_grid": {
-    "_comment": "第一阶段先做小规模网格，优先验证对截断误分类最敏感的几项。",
-    "epochs": [60, 90, 120],
-    "imgsz": [640, 768, 896],
-    "batch": [4, 8],
-    "amp": [false, true],
-    "mosaic": [0.0, 0.1, 0.2],
-    "translate": [0.02, 0.05, 0.08],
-    "scale": [0.15, 0.25, 0.35],
-    "erasing": [0.0, 0.1, 0.2]
-  },
   "full_search_space": {
-    "_comment": "完整版搜索空间。可用于脚本扩展后、或直接调用 ultralytics 原生 train/tune。",
+    "_comment": "完整版候选搜索空间。核心4项沿用当前业务经验，其余范围优先参考当前仓库 ultralytics/utils/tuner.py 与官方 cfg 文档；原图 1536x300，因此 imgsz 更偏向长边尺度，且建议配合 rect=true 使用。是否真正纳入本轮搜索由 enabled_params 决定。",
     "epochs": {
       "type": "int",
       "min": 60,
@@ -43,131 +32,169 @@
     },
     "imgsz": {
       "type": "categorical",
-      "values": [640, 768, 896]
+      "values": [960, 1280, 1536]
     },
     "batch": {
       "type": "categorical",
       "values": [4, 8]
     },
-    "patience": {
-      "type": "categorical",
-      "values": [40, 60, 80]
-    },
     "amp": {
       "type": "categorical",
       "values": [false, true]
     },
-    "optimizer": {
-      "type": "categorical",
-      "values": ["auto", "AdamW", "SGD"]
-    },
     "lr0": {
       "type": "float",
-      "min": 0.002,
-      "max": 0.01,
+      "min": 0.00001,
+      "max": 0.1,
       "scale": "log"
     },
     "lrf": {
       "type": "float",
       "min": 0.01,
-      "max": 0.2
+      "max": 1.0
+    },
+    "momentum": {
+      "type": "float",
+      "min": 0.6,
+      "max": 0.98
     },
     "weight_decay": {
       "type": "float",
-      "min": 0.0002,
+      "min": 0.0,
       "max": 0.001,
-      "scale": "log"
+      "step": 0.00001
     },
     "warmup_epochs": {
       "type": "float",
-      "min": 1.0,
+      "min": 0.0,
       "max": 5.0
     },
     "warmup_momentum": {
       "type": "float",
-      "min": 0.75,
-      "max": 0.9
+      "min": 0.0,
+      "max": 0.95
+    },
+    "box": {
+      "type": "float",
+      "min": 0.02,
+      "max": 0.2
+    },
+    "cls": {
+      "type": "float",
+      "min": 0.2,
+      "max": 4.0
+    },
+    "dfl": {
+      "type": "float",
+      "min": 0.4,
+      "max": 12.0
     },
     "mosaic": {
       "type": "float",
       "min": 0.0,
-      "max": 0.2
+      "max": 1.0
     },
     "close_mosaic": {
-      "type": "categorical",
-      "values": [0, 5, 10]
+      "type": "int",
+      "min": 0,
+      "max": 10,
+      "step": 1
     },
     "mixup": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
     },
     "copy_paste": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
+    },
+    "cutmix": {
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
     },
     "degrees": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 45.0
     },
     "translate": {
       "type": "float",
-      "min": 0.02,
-      "max": 0.08
+      "min": 0.0,
+      "max": 0.9
     },
     "scale": {
       "type": "float",
-      "min": 0.15,
-      "max": 0.35
+      "min": 0.0,
+      "max": 0.9
     },
     "shear": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 10.0
     },
     "perspective": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 0.001
     },
     "flipud": {
-      "type": "categorical",
-      "values": [0.0]
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
     },
     "fliplr": {
-      "type": "categorical",
-      "values": [0.0, 0.5]
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
+    },
+    "bgr": {
+      "type": "float",
+      "min": 0.0,
+      "max": 1.0
     },
     "hsv_h": {
       "type": "float",
-      "min": 0.005,
-      "max": 0.02
+      "min": 0.0,
+      "max": 0.1
     },
     "hsv_s": {
       "type": "float",
-      "min": 0.3,
-      "max": 0.6
+      "min": 0.0,
+      "max": 0.9
     },
     "hsv_v": {
       "type": "float",
-      "min": 0.15,
-      "max": 0.35
+      "min": 0.0,
+      "max": 0.9
     },
     "erasing": {
       "type": "float",
       "min": 0.0,
-      "max": 0.2
+      "max": 0.9
     },
     "multi_scale": {
       "type": "categorical",
       "values": [false]
+    },
+    "rect": {
+      "type": "categorical",
+      "values": [true]
     }
   },
   "fixed_recommendations": {
     "_comment": "这些项建议先固定，不要一开始就放进搜索空间里。",
     "mixup": 0.0,
     "copy_paste": 0.0,
+    "cutmix": 0.0,
     "degrees": 0.0,
     "shear": 0.0,
     "perspective": 0.0,
-    "flipud": 0.0
+    "flipud": 0.0,
+    "bgr": 0.0,
+    "rect": true
   },
   "priority_order": [
     "imgsz",
@@ -178,13 +205,14 @@
     "scale",
     "erasing",
     "lr0",
-    "weight_decay"
+    "weight_decay",
+    "batch"
   ],
   "notes": [
-    "当前 version003 只训练了 30 epoch，先把训练时长拉起来再谈更细的超参。",
     "截断误分类更像数据分布和增强问题，所以 mosaic、translate、scale、erasing 的范围要收窄，避免制造不真实截断形态。",
-    "如果显存允许，imgsz 优先试到 768 或 896，这类边缘截断目标对分辨率更敏感。",
+    "原图约 1536x300，长宽比约 5.12:1；对这类超宽图，单纯使用 640/768/896 这类通用方图 imgsz 容易压缩长边细节，因此 imgsz 候选值上调到 960/1280/1536 更合理。",
+    "训练阶段官方 imgsz 仍以单整数为主，建议固定 rect=true，尽量使用最小矩形 padding，避免把 1536x300 这类图无谓地填成接近方图。",
     "mixup 和 copy_paste 先固定为 0，不建议在这个任务里引入更复杂的合成形态。",
-    "如果后续要自动搜索，建议先做 stage1_recommended_grid，再对最优区域做二次细化。"
+    "full_search_space 现在承担“官方候选池”角色，未必适合第一轮全部放开；第一轮实际搜索仍建议通过 enabled_params 只启用证据更强的参数。"
   ]
 }
