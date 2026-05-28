@@ -1,0 +1,22 @@
+{
+  "cycle_name": "youge_optuna_llm_cycle_v1",
+  "python_executable": "/home/zxy/anaconda3/envs/yolo-pip/bin/python",
+  "max_rounds": 3,
+  "target_metric_threshold": 0.92,
+  "stop_direction": "maximize",
+  "initial_optuna_config_path": "src/train-optuna/youge_optuna_config.json",
+  "initial_search_space_path": "src/train/youge/train_youge_search_space.json",
+  "base_train_config_path": null,
+  "train_script_path": null,
+  "optuna_top_k_report": 20,
+  "enqueue_baseline": false,
+  "llm_refiner": {
+    "enabled": true,
+    "config_path": "src/llm-param-space-opt/config/llm_space_refiner.config.json",
+    "provider": null,
+    "model": null,
+    "base_url": null,
+    "top_k": 10,
+    "failed_k": 10
+  }
+}
