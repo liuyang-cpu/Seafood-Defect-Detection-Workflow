@@ -1,15 +1,15 @@
 {
   "epochs": 30,
   "imgsz": 640,
-  "batch": 4,
+  "batch": 8,
   "device": "0",
-  "workers": 4,
+  "workers": 8,
   "project": "runs/train",
   "name": "youge_yolo11n",
   "version": "version002",
   "patience": 50,
   "mosaic": 0.5,
-  "cache": false,
+  "cache": true,
   "exist_ok": true,
-  "amp": false
+  "amp": true
 }

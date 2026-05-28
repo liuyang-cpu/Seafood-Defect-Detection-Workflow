@@ -1,4 +1,4 @@
-path: E:/deepLearning/git/ultralytics-8.3.163-2/ultralytics-8.3.163/datasets/data/youge
+path: /home/zxy/project/Seafood-Defect-Detection-Workflow/datasets/data/youge
 train: images/train
 val: images/val
 names:

@@ -220,7 +220,6 @@ def load_resume_train_config(resume_checkpoint: Path) -> dict:
     if args_yaml.exists():
         with args_yaml.open("r", encoding="utf-8") as f:
             saved_args = yaml.safe_load(f) or {}
-
     config["epochs"] = saved_args.get("epochs", config["epochs"])
     config["imgsz"] = saved_args.get("imgsz", config["imgsz"])
     config["batch"] = saved_args.get("batch", config["batch"])
