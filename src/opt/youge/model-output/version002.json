@@ -2,9 +2,9 @@
   "species": "youge",
   "version": "version002",
   "train_run_name": "youge_yolo11n_version002",
-  "train_run_dir": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\train\\youge\\runs\\train\\youge_yolo11n_version002",
-  "weights": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\opt\\youge\\model-output\\yolo11n_version002.pt",
-  "last_weights": "E:\\deepLearning\\git\\ultralytics-8.3.163-2\\ultralytics-8.3.163\\src\\opt\\youge\\model-output\\yolo11n_version002_last.pt",
+  "train_run_dir": "/home/zxy/project/Seafood-Defect-Detection-Workflow/src/train/youge/runs/train/youge_yolo11n_version002",
+  "weights": "/home/zxy/project/Seafood-Defect-Detection-Workflow/src/opt/youge/model-output/yolo11n_version002.pt",
+  "last_weights": "/home/zxy/project/Seafood-Defect-Detection-Workflow/src/opt/youge/model-output/yolo11n_version002_last.pt",
   "source_model": "yolo11n.pt",
-  "created_at": "2026-05-18T09:33:07.097299+00:00"
+  "created_at": "2026-05-27T11:31:21.454585+00:00"
 }
