@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import subprocess
 import sys
 from datetime import datetime
@@ -21,9 +22,16 @@ DEFAULT_CONFIG = {
     "train_script_path": None,
     "optuna_top_k_report": 20,
     "enqueue_baseline": False,
+    "sampler_seed_policy": "per_round_increment",
+    "sampler_seed_base": None,
     "llm_refiner": {
         "enabled": True,
+        "config_profile": "deepseek",
         "config_path": "src/llm-param-space-opt/config/llm_space_refiner.config.json",
+        "config_profiles": {
+            "deepseek": "src/llm-param-space-opt/config/llm_space_refiner.config.json",
+            "freemodel": "src/llm-param-space-opt/config/llm_space_refiner.freemodel.config.json",
+        },
         "provider": None,
         "model": None,
         "base_url": None,
@@ -81,6 +89,62 @@ def resolve_path(repo_root: Path, value: str | None) -> Path | None:
         return None
     path = Path(value)
     return path.resolve() if path.is_absolute() else (repo_root / path).resolve()
+
+
+def resolve_llm_config_path(repo_root: Path, llm_refiner: dict[str, Any]) -> tuple[Path | None, str | None]:
+    config_profile = str(llm_refiner.get("config_profile") or "").strip() or None
+    config_profiles = dict(llm_refiner.get("config_profiles") or {})
+    if config_profile is not None:
+        selected = config_profiles.get(config_profile)
+        if selected in (None, ""):
+            known_profiles = ", ".join(sorted(str(key) for key in config_profiles)) or "<none>"
+            raise KeyError(
+                f"LLM config_profile '{config_profile}' is not defined in llm_refiner.config_profiles. "
+                f"Known profiles: {known_profiles}"
+            )
+        return resolve_path(repo_root, str(selected)), config_profile
+    return resolve_path(repo_root, llm_refiner.get("config_path")), None
+
+
+def build_round_optuna_config(
+    *,
+    round_index: int,
+    source_config_path: Path,
+    round_dir: Path,
+    seed_policy: str | None,
+    seed_base: int | None,
+) -> tuple[Path, dict[str, Any], int | None]:
+    config_payload = load_json(source_config_path)
+    sampler = dict(config_payload.get("sampler") or {})
+
+    current_seed = sampler.get("seed")
+    if current_seed not in (None, ""):
+        current_seed = int(current_seed)
+    if seed_base is not None:
+        current_seed = int(seed_base)
+
+    resolved_seed: int | None = current_seed
+    normalized_policy = str(seed_policy or "fixed").strip().lower()
+    if normalized_policy == "per_round_increment":
+        base = 42 if current_seed is None else int(current_seed)
+        resolved_seed = base + round_index - 1
+        sampler["seed"] = resolved_seed
+        config_payload["sampler"] = sampler
+    elif normalized_policy == "random_each_round":
+        resolved_seed = random.SystemRandom().randint(1, 2**31 - 1)
+        sampler["seed"] = resolved_seed
+        config_payload["sampler"] = sampler
+    elif normalized_policy == "fixed":
+        if current_seed is not None:
+            sampler["seed"] = current_seed
+            config_payload["sampler"] = sampler
+            resolved_seed = current_seed
+    else:
+        raise ValueError(f"Unsupported sampler_seed_policy: {seed_policy}")
+
+    round_config_path = round_dir / "effective_optuna_config.json"
+    write_json(round_config_path, config_payload)
+    return round_config_path, config_payload, resolved_seed
 
 
 def format_stamp(dt: datetime) -> str:
@@ -248,34 +312,44 @@ def main() -> None:
     max_rounds = int(config.get("max_rounds") or 1)
     target_metric_threshold = config.get("target_metric_threshold")
     target_metric_threshold = float(target_metric_threshold) if target_metric_threshold not in (None, "") else None
+    sampler_seed_policy = str(config.get("sampler_seed_policy") or "fixed")
+    sampler_seed_base = config.get("sampler_seed_base")
+    sampler_seed_base = int(sampler_seed_base) if sampler_seed_base not in (None, "") else None
 
     initial_optuna_config_path = resolve_path(repo_root, str(config.get("initial_optuna_config_path") or ""))
     initial_search_space_path = resolve_path(repo_root, str(config.get("initial_search_space_path") or ""))
     base_train_config_path = resolve_path(repo_root, config.get("base_train_config_path"))
     train_script_path = resolve_path(repo_root, config.get("train_script_path"))
-    llm_config_path = resolve_path(repo_root, (config.get("llm_refiner") or {}).get("config_path"))
+    llm_refiner = dict(config.get("llm_refiner") or {})
+    llm_config_path, llm_config_profile = resolve_llm_config_path(repo_root, llm_refiner)
 
     if initial_optuna_config_path is None or not initial_optuna_config_path.exists():
         raise FileNotFoundError(f"Initial optuna config not found: {initial_optuna_config_path}")
     if initial_search_space_path is None or not initial_search_space_path.exists():
         raise FileNotFoundError(f"Initial search space not found: {initial_search_space_path}")
+    if llm_config_path is not None and not llm_config_path.exists():
+        raise FileNotFoundError(f"LLM config not found: {llm_config_path}")
 
     initial_optuna_config = load_json(initial_optuna_config_path)
     stop_direction = str(config.get("stop_direction") or initial_optuna_config.get("direction") or "maximize")
 
-    cycle_root = (repo_root / "src" / "scheduler" / "runs" / f"{cycle_name}_{format_stamp(datetime.now())}").resolve()
+    cycle_stamp = format_stamp(datetime.now())
+    cycle_id = f"{cycle_name}_{cycle_stamp}"
+    cycle_root = (repo_root / "src" / "scheduler" / "runs" / cycle_id).resolve()
     cycle_root.mkdir(parents=True, exist_ok=True)
     write_json(
         cycle_root / "resolved_scheduler_config.json",
         {
             **config,
+            "cycle_id": cycle_id,
             "config_path": str(config_path) if config_path.exists() else None,
             "initial_optuna_config_path": str(initial_optuna_config_path),
             "initial_search_space_path": str(initial_search_space_path),
             "base_train_config_path": str(base_train_config_path) if base_train_config_path else None,
             "train_script_path": str(train_script_path) if train_script_path else None,
             "llm_refiner": {
-                **dict(config.get("llm_refiner") or {}),
+                **llm_refiner,
+                "config_profile_resolved": llm_config_profile,
                 "config_path": str(llm_config_path) if llm_config_path else None,
             },
         },
@@ -286,28 +360,43 @@ def main() -> None:
     rounds_summary: list[dict[str, Any]] = []
 
     print(f"[Scheduler] Cycle root: {cycle_root}")
+    print(f"[Scheduler] Cycle id: {cycle_id}")
     print(f"[Scheduler] Max rounds: {max_rounds}")
     print(f"[Scheduler] Stop threshold: {target_metric_threshold} ({stop_direction})")
+    print(f"[Scheduler] Sampler seed policy: {sampler_seed_policy}")
+    print(f"[Scheduler] Sampler seed base: {sampler_seed_base if sampler_seed_base is not None else '<from optuna config>'}")
+    print(f"[Scheduler] LLM config profile: {llm_config_profile or 'direct_path_or_cli'}")
+    print(f"[Scheduler] LLM config path: {llm_config_path if llm_config_path else '<none>'}")
 
     for round_index in range(1, max_rounds + 1):
         round_dir = cycle_root / f"round_{round_index:02d}"
         round_dir.mkdir(parents=True, exist_ok=True)
-        study_name = f"{cycle_name}_round{round_index:02d}"
+        study_name = f"{cycle_id}_round{round_index:02d}"
 
         round_meta: dict[str, Any] = {
+            "cycle_id": cycle_id,
             "round_index": round_index,
             "study_name": study_name,
             "started_at": datetime.now().isoformat(timespec="seconds"),
             "input_optuna_config_path": str(current_optuna_config_path),
             "input_search_space_path": str(current_search_space_path),
         }
+        effective_optuna_config_path, _, effective_sampler_seed = build_round_optuna_config(
+            round_index=round_index,
+            source_config_path=current_optuna_config_path,
+            round_dir=round_dir,
+            seed_policy=sampler_seed_policy,
+            seed_base=sampler_seed_base,
+        )
+        round_meta["effective_optuna_config_path"] = str(effective_optuna_config_path)
+        round_meta["effective_sampler_seed"] = effective_sampler_seed
         write_json(round_dir / "round_meta.json", round_meta)
 
         optuna_command = build_optuna_command(
             python_executable=python_executable,
             repo_root=repo_root,
             study_name=study_name,
-            optuna_config_path=current_optuna_config_path,
+            optuna_config_path=effective_optuna_config_path,
             search_space_path=current_search_space_path,
             base_train_config_path=base_train_config_path,
             train_script_path=train_script_path,
@@ -319,7 +408,6 @@ def main() -> None:
         if args.dry_run:
             print(f"[Scheduler] Round {round_index}: {' '.join(optuna_command)}")
             if round_index == 1:
-                llm_refiner = dict(config.get("llm_refiner") or {})
                 if bool(llm_refiner.get("enabled", True)):
                     llm_command = build_llm_command(
                         python_executable=python_executable,
@@ -329,7 +417,7 @@ def main() -> None:
                         provider=llm_refiner.get("provider"),
                         model=llm_refiner.get("model"),
                         base_url=llm_refiner.get("base_url"),
-                        optuna_config_path=current_optuna_config_path,
+                        optuna_config_path=effective_optuna_config_path,
                         search_space_path=current_search_space_path,
                         top_k=int(llm_refiner.get("top_k") or 10),
                         failed_k=int(llm_refiner.get("failed_k") or 10),
@@ -377,7 +465,6 @@ def main() -> None:
             rounds_summary.append(round_meta)
             break
 
-        llm_refiner = dict(config.get("llm_refiner") or {})
         if not bool(llm_refiner.get("enabled", True)):
             round_meta["stop_reason"] = "llm_refiner_disabled"
             round_meta["finished_at"] = datetime.now().isoformat(timespec="seconds")
@@ -393,7 +480,7 @@ def main() -> None:
             provider=llm_refiner.get("provider"),
             model=llm_refiner.get("model"),
             base_url=llm_refiner.get("base_url"),
-            optuna_config_path=current_optuna_config_path,
+            optuna_config_path=effective_optuna_config_path,
             search_space_path=current_search_space_path,
             top_k=int(llm_refiner.get("top_k") or 10),
             failed_k=int(llm_refiner.get("failed_k") or 10),
@@ -416,7 +503,7 @@ def main() -> None:
             python_executable=python_executable,
             repo_root=repo_root,
             response_path=response_path,
-            optuna_config_path=current_optuna_config_path,
+            optuna_config_path=effective_optuna_config_path,
             search_space_path=current_search_space_path,
             output_root=materialize_output_root,
         )
@@ -452,6 +539,7 @@ def main() -> None:
 
     cycle_summary = {
         "cycle_name": cycle_name,
+        "cycle_id": cycle_id,
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "max_rounds": max_rounds,
         "target_metric_threshold": target_metric_threshold,
