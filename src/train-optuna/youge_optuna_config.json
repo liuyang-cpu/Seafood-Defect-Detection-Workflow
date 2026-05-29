@@ -1,4 +1,8 @@
 {
+  "_references": {
+    "full_search_space_json": "../train/youge/train_youge_search_space.json",
+    "default_train_config_json": "../train/youge/train_youge.json"
+  },
   "study_name": "youge_optuna_tpe_v1",
   "metric": "map50_95",
   "direction": "maximize",
@@ -8,7 +12,7 @@
   "enabled_params": [
     "epochs",
     "imgsz",
-    "amp",
+    "batch",
     "lr0",
     "weight_decay",
     "mosaic",
@@ -27,13 +31,14 @@
   },
   "fixed_overrides": {
     "device": "0",
-    "workers": 8,
-    "batch": 8,
+    "workers": 16,
     "cache": true,
+    "amp": false,
     "patience": 50,
     "exist_ok": true,
     "project": "runs/train",
-    "name": "youge_yolo11n_optuna"
+    "name": "youge_yolo11n_optuna",
+    "optimizer": "AdamW"
   },
   "use_fixed_recommendations": true,
   "continue_on_trial_failure": true,

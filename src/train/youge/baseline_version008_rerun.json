@@ -1,0 +1,28 @@
+{
+  "epochs": 90,
+  "imgsz": 640,
+  "batch": 1,
+  "device": "0",
+  "workers": 0,
+  "project": "runs/train",
+  "name": "youge_yolo11n_baseline_v008_rerun",
+  "version": null,
+  "patience": 50,
+  "mosaic": 0.5,
+  "cache": false,
+  "exist_ok": true,
+  "amp": false,
+  "report_group": "baseline_rerun",
+  "report_label": "old_baseline_v008_rerun",
+  "report_description": "Rerun old version008 baseline recipe from train-circle planner payload.",
+  "extra_train_args": {
+    "translate": 0.1,
+    "scale": 0.5,
+    "erasing": 0.4,
+    "mixup": 0.0,
+    "copy_paste": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0
+  }
+}

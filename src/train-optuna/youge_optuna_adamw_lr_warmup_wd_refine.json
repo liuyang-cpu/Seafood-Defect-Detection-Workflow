@@ -1,0 +1,52 @@
+{
+  "_references": {
+    "full_search_space_json": "../train/youge/train_youge_search_space.json",
+    "default_train_config_json": "../train/youge/train_youge.json",
+    "anchor_run_args_yaml": "../train/youge/runs/train/youge_yolo11n_optuna_trial0020_version085/args.yaml"
+  },
+  "_comment": "固定当前较优的 AdamW/1536/batch24 配方，只精修 lr0、weight_decay 与 warmup，避免继续和 imgsz、batch、增强策略耦合。",
+  "study_name": "youge_optuna_adamw_lr_warmup_wd_refine_v1",
+  "metric": "map50_95",
+  "direction": "maximize",
+  "n_trials": 24,
+  "timeout_seconds": null,
+  "search_space_key": "adamw_lr_warmup_wd_refine_search_space",
+  "enabled_params": [
+    "lr0",
+    "weight_decay",
+    "warmup_epochs",
+    "warmup_momentum",
+    "warmup_bias_lr"
+  ],
+  "sampler": {
+    "name": "TPESampler",
+    "seed": 42,
+    "n_startup_trials": 8,
+    "multivariate": true
+  },
+  "pruner": {
+    "name": "NopPruner"
+  },
+  "fixed_overrides": {
+    "epochs": 120,
+    "imgsz": 1536,
+    "batch": 24,
+    "device": "0",
+    "workers": 16,
+    "cache": true,
+    "amp": false,
+    "patience": 50,
+    "exist_ok": true,
+    "project": "runs/train",
+    "name": "youge_yolo11n_optuna_adamw_refine",
+    "optimizer": "AdamW",
+    "mosaic": 0.02581493349440535,
+    "translate": 0.021328333563112215,
+    "scale": 0.04353140005759698,
+    "erasing": 0.06475967072113775,
+    "close_mosaic": 10
+  },
+  "use_fixed_recommendations": true,
+  "continue_on_trial_failure": true,
+  "subprocess_timeout_seconds": null
+}

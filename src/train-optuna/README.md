@@ -2,6 +2,13 @@
 
 这里放一套基于 `Optuna` 的超参数搜索实现，目标是复用现有 `src/train/youge/train_youge.py` 的训练入口，而不是再复制一套 YOLO 训练逻辑。
 
+## 关键入口
+
+- 默认 Optuna 配置：[youge_optuna_config.json](/home/zxy/project/Seafood-Defect-Detection-Workflow/src/train-optuna/youge_optuna_config.json)
+- 全量搜索空间：[train_youge_search_space.json](/home/zxy/project/Seafood-Defect-Detection-Workflow/src/train/youge/train_youge_search_space.json)
+- 训练入口配置：[train_youge.json](/home/zxy/project/Seafood-Defect-Detection-Workflow/src/train/youge/train_youge.json)
+- Ultralytics 默认训练配置：[default.yaml](/home/zxy/project/Seafood-Defect-Detection-Workflow/ultralytics/cfg/default.yaml)
+
 这样做的好处：
 
 - 继续沿用当前数据集解析和运行时 `dataset.yaml` 生成逻辑
