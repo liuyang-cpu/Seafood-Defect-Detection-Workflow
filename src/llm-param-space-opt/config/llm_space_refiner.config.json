@@ -5,7 +5,8 @@
   "api_key": "sk-7b0553587ffc4ccfa98ed6fc198068ab",
   "api_key_env": "DEEPSEEK_API_KEY",
   "notes": [
-    "建议优先使用 api_key_env，通过环境变量提供密钥。",
-    "如果你坚持放在 JSON 里，可以直接填写 api_key。"
+    "provider/model/base_url/api_key/api_key_env 都从这份配置读取，代码里不再内置默认值。",
+    "当前仓库为了本地使用方便，直接在 api_key 中填写了密钥。",
+    "如果切换到其他供应方，请新建独立配置文件，不要覆盖这份默认 DeepSeek 配置。"
   ]
 }

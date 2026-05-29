@@ -1,0 +1,17 @@
+{
+  "provider": "freemodel",
+  "model": "gpt-5.5",
+  "base_url": "https://api.freemodel.dev/v1",
+  "wire_api": "chat_completions",
+  "model_reasoning_effort": "medium",
+  "disable_response_storage": true,
+  "preferred_auth_method": "apikey",
+  "api_key": "fe_oa_42d53c3d01ddcd4be3a43c02bf4c5dcba0b5d828456130bc",
+  "api_key_env": "FREEMODEL_API_KEY",
+  "notes": [
+    "第三方 OpenAI 兼容中转配置，正式链路使用 /v1/chat/completions 接口。",
+    "最小 responses demo 可用，但正式 llm_refine_optuna_space.py 兼容性更稳的是 /v1 + chat_completions。",
+    "如果中转站实际要求的模型 ID 不是 gpt-5.4，需要把 model 改成平台接受的精确字符串。",
+    "使用时通过 --config 指向这份文件，不要覆盖默认 DeepSeek 配置。"
+  ]
+}

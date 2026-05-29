@@ -23,7 +23,7 @@
 ## 目录
 
 - `config/`
-  - LLM 提供方与模型配置
+  - LLM 提供方、模型、API 地址与密钥入口配置
 - `docs/`
   - 响应 schema
 - `prompts/`
@@ -32,6 +32,17 @@
   - payload 生成、LLM 调用、配置落盘脚本
 
 ## 常用命令
+
+调用前先配置：
+
+- `src/llm-param-space-opt/config/llm_space_refiner.config.json`
+- 以及其中 `api_key_env` 对应的环境变量
+
+例如：
+
+```bash
+export DEEPSEEK_API_KEY="your-key"
+```
 
 生成 payload 并调用 LLM：
 

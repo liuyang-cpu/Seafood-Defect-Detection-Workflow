@@ -23,11 +23,6 @@ from common import (
     write_json,
 )
 
-
-DEFAULT_MODEL = "gpt-5.4-mini"
-DEFAULT_PROVIDER = "openai"
-DEFAULT_DEEPSEEK_MODEL = "deepseek-v4-pro"
-DEFAULT_DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEFAULT_SCHEMA_NAME = "youge_optuna_space_refiner"
 
 
@@ -35,7 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Use an LLM to refine the next-round Optuna search space from one study.")
     parser.add_argument("--study-name", type=str, required=True, help="Study name under src/train-optuna/runs/studies.")
     parser.add_argument("--config", type=str, default=None, help="Optional LLM config JSON path.")
-    parser.add_argument("--provider", type=str, default=None, choices=("openai", "deepseek"), help="LLM provider override.")
+    parser.add_argument("--provider", type=str, default=None, choices=("openai", "deepseek", "freemodel"), help="LLM provider override.")
     parser.add_argument("--model", type=str, default=None, help="Model id override.")
     parser.add_argument("--base-url", type=str, default=None, help="Base URL override.")
     parser.add_argument("--optuna-config", type=str, default=None, help="Optional current optuna config JSON path.")
@@ -53,30 +48,52 @@ def load_config(path: Path | None) -> dict:
 
 
 def resolve_settings(args: argparse.Namespace, config_payload: dict) -> dict:
-    provider = args.provider or config_payload.get("provider") or DEFAULT_PROVIDER
+    provider = args.provider or config_payload.get("provider")
+    if provider == "freemodel":
+        provider = "openai"
     model = args.model or config_payload.get("model")
     base_url = args.base_url or config_payload.get("base_url")
     api_key = config_payload.get("api_key")
     api_key_env = config_payload.get("api_key_env")
+    wire_api = str(config_payload.get("wire_api") or "").strip() or None
+    model_reasoning_effort = str(config_payload.get("model_reasoning_effort") or "").strip() or None
+    disable_response_storage = bool(config_payload.get("disable_response_storage", False))
+    preferred_auth_method = str(config_payload.get("preferred_auth_method") or "").strip() or None
 
-    if provider == "deepseek":
-        model = model or DEFAULT_DEEPSEEK_MODEL
-        base_url = base_url or DEFAULT_DEEPSEEK_BASE_URL
-    else:
-        model = model or DEFAULT_MODEL
+    if not provider:
+        raise RuntimeError(
+            "LLM provider is not configured. Set it in llm_space_refiner.config.json "
+            "or pass --provider."
+        )
+    if provider not in {"openai", "deepseek"}:
+        raise RuntimeError(f"Unsupported provider: {provider}")
+    if not model:
+        raise RuntimeError(
+            "LLM model is not configured. Set it in llm_space_refiner.config.json "
+            "or pass --model."
+        )
+    if provider == "deepseek" and not base_url:
+        raise RuntimeError(
+            "DeepSeek base_url is not configured. Set it in llm_space_refiner.config.json "
+            "or pass --base-url."
+        )
 
     if not api_key and api_key_env:
         api_key = os.environ.get(str(api_key_env))
-    if not api_key and provider == "openai":
-        api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key and provider == "deepseek":
-        api_key = os.environ.get("DEEPSEEK_API_KEY")
+
+    if wire_api not in {None, "responses", "chat_completions"}:
+        raise RuntimeError(f"Unsupported wire_api: {wire_api}")
 
     return {
         "provider": provider,
         "model": model,
         "base_url": base_url,
         "api_key": api_key,
+        "api_key_env": api_key_env,
+        "wire_api": wire_api,
+        "model_reasoning_effort": model_reasoning_effort,
+        "disable_response_storage": disable_response_storage,
+        "preferred_auth_method": preferred_auth_method,
     }
 
 
@@ -100,6 +117,8 @@ def call_openai_responses(
     model: str,
     schema_payload: dict,
     messages: list[dict],
+    model_reasoning_effort: str | None = None,
+    disable_response_storage: bool = False,
 ) -> tuple[dict, dict]:
     try:
         from openai import OpenAI
@@ -107,10 +126,10 @@ def call_openai_responses(
         raise RuntimeError("The openai package is not installed. Install it with: pip install openai") from exc
 
     client = OpenAI(api_key=api_key, base_url=base_url)
-    response = client.responses.create(
-        model=model,
-        input=messages,
-        text={
+    request_payload = {
+        "model": model,
+        "input": messages,
+        "text": {
             "format": {
                 "type": "json_schema",
                 "name": DEFAULT_SCHEMA_NAME,
@@ -118,6 +137,14 @@ def call_openai_responses(
                 "strict": True,
             }
         },
+    }
+    if model_reasoning_effort:
+        request_payload["reasoning"] = {"effort": model_reasoning_effort}
+    if disable_response_storage:
+        request_payload["store"] = False
+
+    response = client.responses.create(
+        **request_payload,
     )
     text = getattr(response, "output_text", None)
     if not text:
@@ -237,7 +264,8 @@ def main() -> None:
     run_root = default_refiner_runs_root(module_root)
     run_root.mkdir(parents=True, exist_ok=True)
     stamp = format_run_stamp(datetime.now())
-    run_dir = run_root / f"refine_{stamp}_{study_name}"
+    model_tag = sanitize_name(str(settings["model"]), fallback="model")
+    run_dir = run_root / f"refine_{stamp}_{study_name}_{model_tag}"
     run_dir.mkdir(parents=True, exist_ok=True)
 
     payload_path = run_dir / "refiner_payload.json"
@@ -250,12 +278,16 @@ def main() -> None:
     if not settings["api_key"]:
         raise RuntimeError(
             f"No API key resolved for provider={settings['provider']}. "
-            f"Check {config_path} and/or the related environment variable."
+            f"Check {config_path} and/or the configured api_key_env={settings['api_key_env']}."
         )
 
     schema_payload = load_json(schema_path)
     messages = build_messages(payload, prompts_dir=module_root / "prompts")
-    if settings["provider"] == "deepseek":
+    wire_api = settings.get("wire_api")
+    use_chat_completions = wire_api == "chat_completions" or (
+        wire_api is None and settings["provider"] == "deepseek"
+    )
+    if use_chat_completions:
         response_payload, raw_response = call_deepseek_chat(
             api_key=str(settings["api_key"]),
             base_url=str(settings["base_url"]),
@@ -269,6 +301,8 @@ def main() -> None:
             model=str(settings["model"]),
             schema_payload=schema_payload,
             messages=messages,
+            model_reasoning_effort=str(settings["model_reasoning_effort"]) if settings["model_reasoning_effort"] else None,
+            disable_response_storage=bool(settings["disable_response_storage"]),
         )
 
     response_path = run_dir / "refiner_response.json"
@@ -289,6 +323,10 @@ def main() -> None:
             "provider": settings["provider"],
             "model": settings["model"],
             "base_url": settings["base_url"],
+            "wire_api": settings["wire_api"],
+            "model_reasoning_effort": settings["model_reasoning_effort"],
+            "disable_response_storage": settings["disable_response_storage"],
+            "preferred_auth_method": settings["preferred_auth_method"],
             "config_path": str(config_path) if config_path.exists() else None,
             "study_dir": str(study_dir),
             "optuna_config_path": str(optuna_config_path),
